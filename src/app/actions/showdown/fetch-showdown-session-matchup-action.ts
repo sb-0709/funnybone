@@ -1,15 +1,19 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
+import type { Database } from "@/types/supabase";
 import type { ShowdownActionResult, ShowdownMatchup } from "./types";
 
+type MatchupRow =
+  Database["public"]["Functions"]["get_showdown_session_matchup"]["Returns"][number];
+
 /**
- * Ask the database for the next Caption Showdown matchup: one public image and
- * two of its captions the signed-in user has not compared yet.
- * Returns data: null when the user has judged every available pair.
+ * Next matchup for a Showdown session: one image (not already used in this
+ * session) and two of its captions the signed-in user hasn't compared.
+ * Returns data: null when there are no matchups left for this user.
  */
-export const fetchShowdownMatchupAction = async (
-  excludeImageId?: string | null
+export const fetchShowdownSessionMatchupAction = async (
+  excludeImageIds: string[] = []
 ): Promise<ShowdownActionResult<ShowdownMatchup | null>> => {
   const supabase = await createClient();
   const {
@@ -20,17 +24,16 @@ export const fetchShowdownMatchupAction = async (
     return { ok: false, error: "Log in to play Caption Showdown." };
   }
 
-  const { data, error } = await supabase.rpc(
-    "get_showdown_matchup",
-    excludeImageId ? { p_exclude_image_id: excludeImageId } : {}
-  );
+  const { data, error } = await supabase.rpc("get_showdown_session_matchup", {
+    p_exclude_image_ids: excludeImageIds,
+  });
 
   if (error) {
     console.error("Error fetching showdown matchup:", error);
     return { ok: false, error: "Couldn't load the next matchup." };
   }
 
-  const row = data?.[0];
+  const row = ((data ?? []) as MatchupRow[])[0];
   if (!row) {
     return { ok: true, data: null };
   }

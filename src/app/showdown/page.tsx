@@ -2,8 +2,8 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
 import {
-  fetchMyShowdownPickCountAction,
-  fetchShowdownMatchupAction,
+  fetchMyShowdownSummaryAction,
+  fetchShowdownSessionMatchupAction,
 } from "@/app/actions/showdown";
 import { ShowdownGame } from "@/components/showdown/showdown-game";
 
@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Caption Showdown",
-  description: "Two captions, one image. Pick the funnier one.",
+  description: "5 images, 2 captions each. Pick the funnier one.",
 };
 
 export default async function ShowdownPage() {
@@ -24,16 +24,17 @@ export default async function ShowdownPage() {
     return redirect("/login");
   }
 
-  const [initialMatchup, initialPickCount] = await Promise.all([
-    fetchShowdownMatchupAction(),
-    fetchMyShowdownPickCountAction(),
+  const [firstMatchup, initialSummary] = await Promise.all([
+    fetchShowdownSessionMatchupAction([]),
+    fetchMyShowdownSummaryAction(),
   ]);
 
   return (
     <ShowdownGame
-      initialMatchup={initialMatchup.ok ? initialMatchup.data : null}
-      initialError={initialMatchup.ok ? null : initialMatchup.error}
-      initialPickCount={initialPickCount}
+      userId={user.id}
+      initialMatchup={firstMatchup.ok ? firstMatchup.data : null}
+      initialError={firstMatchup.ok ? null : firstMatchup.error}
+      initialSummary={initialSummary}
     />
   );
 }

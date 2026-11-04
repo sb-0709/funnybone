@@ -10,6 +10,7 @@ export default function NavigationMenu() {
   // Content browsing items (public discovery + personal collection)
   const navItems = [
     { label: "Top 100", href: "/" },
+    { label: "Showdown", href: "/showdown" },
     { label: "Favorites", href: "/favorites" },
     { label: "Images", href: "/my-images" },
   ];

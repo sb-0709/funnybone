@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      caption_showdown_picks: {
+        Row: {
+          created_at: string
+          id: number
+          image_id: string
+          loser_caption_id: string
+          loser_rating_before: number
+          profile_id: string
+          rating_change: number
+          winner_caption_id: string
+          winner_rating_before: number
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          image_id: string
+          loser_caption_id: string
+          loser_rating_before: number
+          profile_id?: string
+          rating_change: number
+          winner_caption_id: string
+          winner_rating_before: number
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          image_id?: string
+          loser_caption_id?: string
+          loser_rating_before?: number
+          profile_id?: string
+          rating_change?: number
+          winner_caption_id?: string
+          winner_rating_before?: number
+        }
+        Relationships: []
+      }
+      caption_showdown_ratings: {
+        Row: {
+          caption_id: string
+          matches: number
+          rating: number
+          updated_at: string
+          wins: number
+        }
+        Insert: {
+          caption_id: string
+          matches?: number
+          rating?: number
+          updated_at?: string
+          wins?: number
+        }
+        Update: {
+          caption_id?: string
+          matches?: number
+          rating?: number
+          updated_at?: string
+          wins?: number
+        }
+        Relationships: []
+      }
       allowed_signup_domains: {
         Row: {
           apex_domain: string
@@ -3313,6 +3373,93 @@ export type Database = {
       }
     }
     Functions: {
+      get_showdown_session_matchup: {
+        Args: { p_exclude_image_ids?: string[] }
+        Returns: {
+          image_description: string | null
+          image_id: string
+          image_url: string | null
+          left_caption_id: string
+          left_content: string | null
+          left_matches: number
+          left_rating: number
+          right_caption_id: string
+          right_content: string | null
+          right_matches: number
+          right_rating: number
+        }[]
+      }
+      get_my_showdown_summary: {
+        Args: { p_tz?: string }
+        Returns: {
+          crowd_agreement_pct: number | null
+          day_streak: number
+          picks_today: number
+          total_picks: number
+          tournaments: number
+        }[]
+      }
+      get_showdown_image_ranking: {
+        Args: { p_image_id: string; p_limit?: number }
+        Returns: {
+          caption_id: string
+          content: string | null
+          matches: number
+          rating: number
+          wins: number
+        }[]
+      }
+      get_showdown_tournament: {
+        Args: { p_exclude_image_id?: string }
+        Returns: {
+          bracket_size: number
+          caption_id: string
+          content: string | null
+          image_description: string | null
+          image_id: string
+          image_url: string | null
+          matches: number
+          rating: number
+        }[]
+      }
+      get_showdown_leaderboard: {
+        Args: { p_limit?: number; p_min_matches?: number }
+        Returns: {
+          caption_id: string
+          content: string | null
+          image_id: string
+          image_url: string | null
+          matches: number
+          rating: number
+          wins: number
+        }[]
+      }
+      get_showdown_matchup: {
+        Args: { p_exclude_image_id?: string }
+        Returns: {
+          image_description: string | null
+          image_id: string
+          image_url: string | null
+          left_caption_id: string
+          left_content: string | null
+          left_matches: number
+          left_rating: number
+          right_caption_id: string
+          right_content: string | null
+          right_matches: number
+          right_rating: number
+        }[]
+      }
+      record_showdown_pick: {
+        Args: { p_loser_caption_id: string; p_winner_caption_id: string }
+        Returns: {
+          loser_matches: number
+          loser_rating: number
+          rating_change: number
+          winner_matches: number
+          winner_rating: number
+        }[]
+      }
       api_humor_flavor_stats_payload: { Args: never; Returns: Json }
       can_access_caption:
         | {

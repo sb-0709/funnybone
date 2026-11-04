@@ -40,6 +40,23 @@ export const showdownStyles = {
     "border-gray-200 hover:-translate-y-0.5 hover:border-primary hover:shadow-lg",
     "dark:border-white/10 dark:hover:border-primary"
   ),
+  eyebrow: join(
+    "flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary"
+  ),
+  label: join(
+    "flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-muted-foreground"
+  ),
+  championText: join(
+    "text-2xl font-bold leading-snug text-gray-900 dark:text-white sm:text-3xl"
+  ),
+  ratingSmall: "shrink-0 text-sm font-semibold tabular-nums text-gray-900 dark:text-white",
+  subtleLink: "mt-3 inline-block text-sm text-muted-foreground underline-offset-4 hover:underline",
+  placeNumber: "w-8 shrink-0 text-center text-lg font-bold tabular-nums text-muted-foreground",
+  roundNumber: "w-5 shrink-0 text-center font-bold tabular-nums text-muted-foreground",
+  versus: join(
+    "flex items-center justify-center text-sm font-bold uppercase tracking-widest",
+    "text-muted-foreground"
+  ),
   keyHint: join(
     "hidden rounded border border-gray-300 px-1.5 py-0.5 font-mono",
     "dark:border-white/20 sm:inline-block"
