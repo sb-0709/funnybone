@@ -48,3 +48,4 @@ IntelliJ
 
 .env
 .env*.local
+.env*

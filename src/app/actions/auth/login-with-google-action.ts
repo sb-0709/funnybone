@@ -13,16 +13,17 @@ export const signInWithGoogleAction = async () => {
   const redirectUrl = `${origin}/auth/callback`;
 
   const { error, data } = await supabase.auth.signInWithOAuth({
-    provider: "google",
+    provider: 'google',
     options: {
       redirectTo: redirectUrl,
       // Add any needed query parameters
       queryParams: {
         // Add domain check parameter
-        hd: "*", // This will ensure we get the email domain
+        hd: '*', // This will ensure we get the email domain
+        prompt: 'select_account',
       },
     },
-  });
+  })
 
   if (error) {
     console.error("Error initiating Google sign-in:", error.message);
