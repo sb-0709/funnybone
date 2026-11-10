@@ -29,6 +29,8 @@ import {
 import { CaptionModal } from "@/components/ui/caption-modal";
 import { BookmarkButton } from "@/components/ui/bookmark-button";
 import { Top100CaptionImage } from "@/components/top-100-caption-image";
+import { HomeIntro } from '@/components/home-intro'
+import { NewPostButton } from '@/components/new-post-button'
 
 // functions to load in our pregenrated thumbnails
 const THUMBNAIL_SIZES = [320, 480, 640, 750, 828, 1080, 1200, 1920, 2048, 3840] as const;
@@ -70,14 +72,16 @@ type PopularCaption = {
 type PopularCaptionsFilter = "all" | "year" | "past30" | "week";
 
 interface PopularCaptionsPageClientProps {
-  initialFilter?: PopularCaptionsFilter;
-  pastWeekHref?: string;
-  pastMonthHref?: string;
-  pastYearHref?: string;
-  allTimeHref?: string;
-  initialCaptions?: PopularCaption[];
-  initialUserVotes?: Record<string, 1 | -1 | null>;
-  initialIsAuthenticated?: boolean;
+  initialFilter?: PopularCaptionsFilter
+  pastWeekHref?: string
+  pastMonthHref?: string
+  pastYearHref?: string
+  allTimeHref?: string
+  initialCaptions?: PopularCaption[]
+  initialUserVotes?: Record<string, 1 | -1 | null>
+  initialIsAuthenticated?: boolean
+  /** Show the landing intro (homepage only). */
+  showIntro?: boolean
 }
 
 const filterOptions: Array<{ key: PopularCaptionsFilter; label: string }> = [
@@ -86,6 +90,63 @@ const filterOptions: Array<{ key: PopularCaptionsFilter; label: string }> = [
   { key: "year", label: "Past Year" },
   { key: "all", label: "All Time" },
 ];
+
+const FEATURED_LABELS: Record<PopularCaptionsFilter, string> = {
+  week: '#1 this week',
+  past30: '#1 this month',
+  year: '#1 this year',
+  all: '#1 of all time',
+}
+
+/** Next-wider time window to suggest when the current one is empty. */
+const WIDER_FILTER: Partial<Record<PopularCaptionsFilter, PopularCaptionsFilter>> = {
+  week: 'past30',
+  past30: 'year',
+  year: 'all',
+}
+
+function EmptyWindow({
+  filter,
+  filterHrefs,
+  onSelect,
+}: {
+  filter: PopularCaptionsFilter
+  filterHrefs: Partial<Record<PopularCaptionsFilter, string>>
+  onSelect: (filter: PopularCaptionsFilter) => void
+}) {
+  const wider = WIDER_FILTER[filter]
+  const label = filterOptions.find((option) => option.key === filter)?.label.toLowerCase()
+  const widerLabel = filterOptions.find((option) => option.key === wider)?.label
+  const buttonClass =
+    'inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 font-semibold ' +
+    'text-primary-foreground transition-colors hover:bg-primary/90'
+
+  return (
+    <div className="mx-auto mt-6 flex max-w-md flex-col items-center gap-3 text-center">
+      <p className="text-lg text-gray-900 dark:text-white">
+        No captions have been voted up in the {label ?? 'selected period'} yet.
+      </p>
+      {wider && widerLabel ? (
+        <>
+          <p className="text-muted-foreground">The funniest from a longer period are waiting.</p>
+          {filterHrefs[wider] ? (
+            <Link href={filterHrefs[wider]!} className={buttonClass}>
+              See {widerLabel}
+            </Link>
+          ) : (
+            <button type="button" onClick={() => onSelect(wider)} className={buttonClass}>
+              See {widerLabel}
+            </button>
+          )}
+        </>
+      ) : (
+        <Link href="/new" className={buttonClass}>
+          Caption a photo
+        </Link>
+      )}
+    </div>
+  )
+}
 
 export default function PopularCaptionsPageClient({
   initialFilter = "week",
@@ -96,6 +157,7 @@ export default function PopularCaptionsPageClient({
   initialCaptions = [],
   initialUserVotes = {},
   initialIsAuthenticated = false,
+  showIntro = false,
 }: PopularCaptionsPageClientProps) {
   const [popularCaptions, setPopularCaptions] = useState<PopularCaption[]>(initialCaptions);
   const [userVotes, setUserVotes] = useState<Record<string, 1 | -1 | null>>(initialUserVotes);
@@ -375,99 +437,97 @@ export default function PopularCaptionsPageClient({
   return (
     <div className="container mx-auto px-1 py-1">
       {/* Mobile-only Get Crackd Box */}
-      <div className="block sm:hidden w-full mb-8">
-        <div
-          className="bg-gray-50 dark:bg-neutral-800 rounded-2xl p-8 flex
-                      flex-col items-center justify-center"
-        >
-          <div className="relative w-24 h-24 mb-4">
-            <BrandImage variant="mark" alt="Crackd Logo" className="w-full h-full" />
-          </div>
-          <h2
-            className="text-gray-900 dark:text-white text-4xl font-bold
-                        tracking-tight scale-y-150"
-          >
-            GET CRACKD
-          </h2>
-        </div>
-      </div>
+      {showIntro && (
+        <HomeIntro
+          featured={popularCaptions[0] ?? null}
+          featuredLabel={FEATURED_LABELS[filter]}
+          isAuthenticated={isAuthenticated}
+        />
+      )}
 
-      <div className="flex justify-center mb-8 relative" style={{ height: "44px" }}>
-        <div
-          className="relative flex justify-between w-full max-w-[470px] h-[36px] sm:h-[44px] 
-                      bg-transparent rounded-3xl mx-auto border border-[#666363] overflow-hidden"
-        >
-          {/* Primary Slider */}
+      {/* Toolbar: title, time filter and page size, aligned with the grid */}
+      <div
+        id="top-captions"
+        className="mb-8 grid scroll-mt-28 grid-cols-1 items-center gap-4
+                   lg:grid-cols-[1fr_470px_1fr]"
+      >
+        <h2 className="text-center text-xl font-bold text-gray-900 dark:text-white lg:text-left">
+          Top 100 captions
+        </h2>
+        <div className="flex w-full justify-center relative" style={{ height: '44px' }}>
           <div
-            className={`absolute top-0 left-0 h-[36px] sm:h-[44px] w-1/4 rounded-[16px] 
+            className="relative flex justify-between w-full max-w-[470px] h-[36px] sm:h-[44px]
+                      bg-transparent rounded-3xl mx-auto border border-[#666363] overflow-hidden"
+          >
+            {/* Primary Slider */}
+            <div
+              className={`absolute top-0 left-0 h-[36px] sm:h-[44px] w-1/4 rounded-[16px] 
               bg-primary dark:bg-primary/40
                        transition-all duration-300 ${
-                        filter === "week"
-                          ? "rounded-l-3xl rounded-r-none"
-                          : filter === "all"
-                          ? "rounded-r-3xl rounded-l-none"
-                          : "rounded-none"
-                      }`}
-            style={{
-              transform: `translateX(${(
-                filter === "week" ? 0 :
-                filter === "past30" ? 100 :
-                filter === "year" ? 200 : 300
-              )}%)`,
-            }}
-          />
+                         filter === 'week'
+                           ? 'rounded-l-3xl rounded-r-none'
+                           : filter === 'all'
+                             ? 'rounded-r-3xl rounded-l-none'
+                             : 'rounded-none'
+                       }`}
+              style={{
+                transform: `translateX(${
+                  filter === 'week' ? 0 : filter === 'past30' ? 100 : filter === 'year' ? 200 : 300
+                }%)`,
+              }}
+            />
 
-          {/* Buttons */}
-          {filterOptions.map(({ key, label }) => {
-            const isActive = filter === key;
-            const className = `relative w-1/4 h-full flex items-center justify-center
+            {/* Buttons */}
+            {filterOptions.map(({ key, label }) => {
+              const isActive = filter === key
+              const className = `relative w-1/4 h-full flex items-center justify-center
                           text-xs sm:text-sm md:text-base font-normal leading-[120%]
                           tracking-[-0.02em] z-10 transition-colors 
                           duration-200 ${
                             isActive
-                              ? "text-white dark:text-white border-2 border-primary"
-                              : "text-gray-800 dark:text-[#9A9A9A]"
+                              ? 'text-white dark:text-white border-2 border-primary'
+                              : 'text-gray-800 dark:text-[#9A9A9A]'
                           } ${
-                            key === "week"
-                              ? "rounded-l-3xl rounded-r-none"
-                              : key === "all"
-                              ? "rounded-r-3xl rounded-l-none"
-                              : "rounded-none"
-                          }`;
+                            key === 'week'
+                              ? 'rounded-l-3xl rounded-r-none'
+                              : key === 'all'
+                                ? 'rounded-r-3xl rounded-l-none'
+                                : 'rounded-none'
+                          }`
 
-            const href = filterHrefs[key];
-            if (href) {
+              const href = filterHrefs[key]
+              if (href) {
+                return (
+                  <Link key={key} href={href} className={className}>
+                    {label}
+                  </Link>
+                )
+              }
+
               return (
-                <Link key={key} href={href} className={className}>
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setFilter(key)}
+                  className={className}
+                >
                   {label}
-                </Link>
-              );
-            }
+                </button>
+              )
+            })}
 
-            return (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setFilter(key)}
-                className={className}
-              >
-                {label}
-              </button>
-            );
-          })}
-
-          {/* Vertical Borders */}
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="absolute top-0 bottom-0 w-[2px] bg-[#666363]"
-              style={{ left: `${i * 25}%` }}
-            />
-          ))}
+            {/* Vertical Borders */}
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="absolute top-0 bottom-0 w-[2px] bg-[#666363]"
+                style={{ left: `${i * 25}%` }}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="flex-1 w-full flex flex-col gap-8 p-4 relative">
-        <div className="flex justify-end items-center w-full max-w-7xl mx-auto px-4">
+        <div className="relative flex justify-center lg:justify-end">
+          <div className="flex items-center">
             <div className="flex items-center gap-4">
               <span className="text-sm text-muted-foreground">Show</span>
               <div className="relative" ref={dropdownRef}>
@@ -489,8 +549,8 @@ export default function PopularCaptionsPageClient({
                       <button
                         key={value}
                         onClick={() => {
-                          handleItemsPerPageChange(value.toString());
-                          setIsDropdownOpen(false);
+                          handleItemsPerPageChange(value.toString())
+                          setIsDropdownOpen(false)
                         }}
                         className="w-full px-3 py-2 text-sm text-primary hover:bg-primary/10
                                   transition-colors duration-200 text-left"
@@ -505,27 +565,28 @@ export default function PopularCaptionsPageClient({
             </div>
           </div>
         </div>
+      </div>
       {visibleCaptions.length === 0 ? (
-        <p className="text-center text-gray-400 mt-12 text-lg">No captions found.</p>
+        <EmptyWindow filter={filter} filterHrefs={filterHrefs} onSelect={setFilter} />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {visibleCaptions.map((caption, index) => {
             // generate our thumbnail urls
-            const info = parseImageUrl(caption.image_url);
-            let displayUrl = caption.image_url;
+            const info = parseImageUrl(caption.image_url)
+            let displayUrl = caption.image_url
 
-            let srcSet: string | undefined;
+            let srcSet: string | undefined
             if (info) {
-              const baseUrl = caption.image_url.split("/").slice(0, 3).join("/");
-              const t = generateThumbnailUrls(baseUrl, info.userId, info.imageId, info.extension);
-              displayUrl = t.gridUrl;
-              srcSet = t.srcSet;
+              const baseUrl = caption.image_url.split('/').slice(0, 3).join('/')
+              const t = generateThumbnailUrls(baseUrl, info.userId, info.imageId, info.extension)
+              displayUrl = t.gridUrl
+              srcSet = t.srcSet
             }
 
-            const shareUrl = buildCaptionShareUrl(caption.id);
-            const currentVote = userVotes[caption.id] ?? null;
-            const isUpvoted = currentVote === 1;
-            const isDownvoted = currentVote === -1;
+            const shareUrl = buildCaptionShareUrl(caption.id)
+            const currentVote = userVotes[caption.id] ?? null
+            const isUpvoted = currentVote === 1
+            const isDownvoted = currentVote === -1
 
             return (
               <div
@@ -554,13 +615,13 @@ export default function PopularCaptionsPageClient({
                           <TooltipTrigger asChild>
                             <button
                               onClick={(event) => {
-                                event.stopPropagation();
-                                handleVote(caption.id, 1);
+                                event.stopPropagation()
+                                handleVote(caption.id, 1)
                               }}
                               className={`cursor-pointer transition-colors ${
                                 isUpvoted
-                                  ? "text-primary"
-                                  : "text-gray-500 dark:text-gray-400 hover:text-primary"
+                                  ? 'text-primary'
+                                  : 'text-gray-500 dark:text-gray-400 hover:text-primary'
                               }`}
                             >
                               <ChevronUp className="w-4 h-4" />
@@ -582,13 +643,13 @@ export default function PopularCaptionsPageClient({
                           <TooltipTrigger asChild>
                             <button
                               onClick={(event) => {
-                                event.stopPropagation();
-                                handleVote(caption.id, -1);
+                                event.stopPropagation()
+                                handleVote(caption.id, -1)
                               }}
                               className={`cursor-pointer transition-colors ${
                                 isDownvoted
-                                  ? "text-primary"
-                                  : "text-gray-500 dark:text-gray-400 hover:text-primary"
+                                  ? 'text-primary'
+                                  : 'text-gray-500 dark:text-gray-400 hover:text-primary'
                               }`}
                             >
                               <ChevronDown className="w-4 h-4" />
@@ -619,11 +680,7 @@ export default function PopularCaptionsPageClient({
 
                   {/* Main Image */}
                   <div className="w-full flex-1 min-h-[320px] px-3 pb-3">
-                    <Top100CaptionImage
-                      src={displayUrl}
-                      srcSet={srcSet}
-                      captionId={caption.id}
-                    />
+                    <Top100CaptionImage src={displayUrl} srcSet={srcSet} captionId={caption.id} />
                   </div>
 
                   {/* Bottom Action Bar */}
@@ -658,21 +715,21 @@ export default function PopularCaptionsPageClient({
                   </div>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       )}
       {hasMore && (
-              <div className="flex justify-center mt-8">
-                <button
-                  onClick={loadMore}
-                  className="px-6 py-2 bg-primary/20 hover:bg-primary/30 text-primary
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={loadMore}
+            className="px-6 py-2 bg-primary/20 hover:bg-primary/30 text-primary
                              rounded-full transition-colors duration-200"
-                >
-                  Load More
-                </button>
-              </div>
-            )}
+          >
+            Load More
+          </button>
+        </div>
+      )}
 
       {/* Modal */}
       {selectedIndex !== null && popularCaptions.length > 0 && (
@@ -690,28 +747,18 @@ export default function PopularCaptionsPageClient({
           wrapNavigation
         />
       )}
-      
-      {/* New Post button */}
-      <div className="fixed bottom-16 left-1/2 -translate-x-1/2 z-40">
-        <a
-          href="/new"
-          className="flex items-center justify-center w-48 h-12 rounded-full
-                    bg-primary text-primary-foreground font-bold text-lg shadow-lg
-                    hover:bg-primary/90 transition-colors duration-200
-                    select-none"
-        >
-          New Post
-        </a>
-      </div>
+
+      {/* New Post button (hides over the intro and the footer) */}
+      <NewPostButton />
       {/* Login Prompt Modal */}
       <LoginPromptModal
         open={showLoginPrompt}
         onOpenChange={setShowLoginPrompt}
         onProceed={() => {
-          setShowLoginPrompt(false);
-          router.push("/login");
+          setShowLoginPrompt(false)
+          router.push('/login')
         }}
       />
     </div>
-  );
+  )
 }

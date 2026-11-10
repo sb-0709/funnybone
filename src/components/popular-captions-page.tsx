@@ -15,15 +15,17 @@ type PopularCaption = {
 };
 
 interface PopularCaptionsPageProps {
-  initialFilter?: PopularCaptionsFilter;
-  pastWeekHref?: string;
-  pastMonthHref?: string;
-  pastYearHref?: string;
-  allTimeHref?: string;
+  initialFilter?: PopularCaptionsFilter
+  showIntro?: boolean
+  pastWeekHref?: string
+  pastMonthHref?: string
+  pastYearHref?: string
+  allTimeHref?: string
 }
 
 export default async function PopularCaptionsPage({
   initialFilter = "week",
+  showIntro = false,
   pastWeekHref,
   pastMonthHref,
   pastYearHref,
@@ -52,6 +54,7 @@ export default async function PopularCaptionsPage({
       initialCaptions={captions}
       initialUserVotes={initialUserVotes}
       initialIsAuthenticated={isAuthenticated}
+      showIntro={showIntro}
     />
-  );
+  )
 }
