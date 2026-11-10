@@ -1,6 +1,7 @@
-import PopularCaptionsPage from "@/components/popular-captions-page";
-import { TOP_100_FILTER_HREFS } from "@/lib/top-100";
+import PopularCaptionsPage from '@/components/popular-captions-page'
 
+// The homepage switches the time filter in place (no filter links), so the
+// intro stays on screen when you pick Past Month, Past Year or All Time.
 export default function Home() {
-  return <PopularCaptionsPage {...TOP_100_FILTER_HREFS} showIntro />
+  return <PopularCaptionsPage showIntro />
 }

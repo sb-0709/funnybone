@@ -394,7 +394,7 @@ export default function PopularCaptionsPageClient({
   const visibleCaptions = popularCaptions.slice(0, visibleCount);
   const hasMore = visibleCount < popularCaptions.length;
 
-  if (isLoading) {
+  if (isLoading && !showIntro) {
     return (
       <div className="container mx-auto px-4">
         <div
@@ -437,7 +437,8 @@ export default function PopularCaptionsPageClient({
   return (
     <div className="container mx-auto px-1 py-1">
       {/* Mobile-only Get Crackd Box */}
-      {showIntro && (
+      {/* Intro is for visitors; logged-in users go straight to the Top 100 */}
+      {showIntro && !isAuthenticated && (
         <HomeIntro
           featured={popularCaptions[0] ?? null}
           featuredLabel={FEATURED_LABELS[filter]}
@@ -567,9 +568,19 @@ export default function PopularCaptionsPageClient({
         </div>
       </div>
       {visibleCaptions.length === 0 ? (
-        <EmptyWindow filter={filter} filterHrefs={filterHrefs} onSelect={setFilter} />
+        isLoading ? (
+          <p className="mt-6 text-center text-muted-foreground" aria-live="polite">
+            Loading captions…
+          </p>
+        ) : (
+          <EmptyWindow filter={filter} filterHrefs={filterHrefs} onSelect={setFilter} />
+        )
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div
+          className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6
+                      transition-opacity ${isLoading ? 'pointer-events-none opacity-50' : ''}`}
+          aria-busy={isLoading}
+        >
           {visibleCaptions.map((caption, index) => {
             // generate our thumbnail urls
             const info = parseImageUrl(caption.image_url)
