@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { fetchPopularCaptionsAction } from "@/app/actions/captions/fetch-popular-captions-action";
+import { findCaptionWindowAction } from '@/app/actions/captions/find-caption-window-action'
 import {
   toggleCaptionVoteAction,
   fetchUserCaptionVotesAction,
@@ -17,7 +18,7 @@ import { useRouter } from "next/navigation";
 import { LoginPromptModal } from "@/components/ui/login-prompt-modal";
 import { checkAuthStatusAction } from "@/app/actions/auth/check-auth-status";
 import Link from "next/link";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { ChevronUp, ChevronDown, Plus } from 'lucide-react'
 import { buildCaptionShareUrl } from "@/utils/site-url";
 import { BrandImage } from "@/components/brand-image";
 import {
@@ -82,6 +83,8 @@ interface PopularCaptionsPageClientProps {
   initialIsAuthenticated?: boolean
   /** Show the landing intro (homepage only). */
   showIntro?: boolean
+  /** Longer time window to suggest when the first window is empty (from the server). */
+  initialSuggestion?: PopularCaptionsFilter | null
 }
 
 const filterOptions: Array<{ key: PopularCaptionsFilter; label: string }> = [
@@ -98,95 +101,108 @@ const FEATURED_LABELS: Record<PopularCaptionsFilter, string> = {
   all: '#1 of all time',
 }
 
-/** Time windows from shortest to longest. */
-const FILTER_ORDER: PopularCaptionsFilter[] = ["week", "past30", "year", "all"];
-
 /**
- * Shown when the selected time window has no captions. It checks the longer
- * windows in order and suggests the first one that actually has captions, so
- * the user never gets sent to another empty page.
+ * Shown when the selected time window has no captions. It suggests the
+ * shortest longer window that actually has captions (worked out on the server
+ * for the first page load, and in one request when the user switches).
  */
 function EmptyWindow({
                        filter,
                        filterHrefs,
                        onSelect,
+                       isAuthenticated,
+                       initialSuggestion,
                      }: {
   filter: PopularCaptionsFilter;
   filterHrefs: Partial<Record<PopularCaptionsFilter, string>>;
   onSelect: (filter: PopularCaptionsFilter) => void;
+  isAuthenticated: boolean;
+  /** Already known from the server; undefined means "look it up". */
+  initialSuggestion?: PopularCaptionsFilter | null;
 }) {
   // undefined = still checking, null = no longer window has captions
   const [suggestion, setSuggestion] = useState<PopularCaptionsFilter | null | undefined>(
-    undefined
+    initialSuggestion
   );
 
   useEffect(() => {
+    if (initialSuggestion !== undefined) return;
     let cancelled = false;
-    const findWindowWithCaptions = async () => {
-      const longer = FILTER_ORDER.slice(FILTER_ORDER.indexOf(filter) + 1);
-      for (const candidate of longer) {
-        try {
-          const captions = await fetchPopularCaptionsAction(1, candidate);
-          if (captions.length > 0) {
-            if (!cancelled) setSuggestion(candidate);
-            return;
-          }
-        } catch (error) {
-          console.error("Error checking time window:", error);
-        }
-      }
-      if (!cancelled) setSuggestion(null);
-    };
-    void findWindowWithCaptions();
+    findCaptionWindowAction(filter)
+      .then((found) => {
+        if (!cancelled) setSuggestion(found);
+      })
+      .catch(() => {
+        if (!cancelled) setSuggestion(null);
+      });
     return () => {
       cancelled = true;
     };
-  }, [filter]);
+  }, [filter, initialSuggestion]);
 
   const label = filterOptions.find((option) => option.key === filter)?.label.toLowerCase();
   const suggestionLabel = filterOptions.find((option) => option.key === suggestion)?.label;
-  const buttonClass =
-    "inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 font-semibold " +
-    "text-primary-foreground transition-colors hover:bg-primary/90";
+  // Both buttons share one size; New Post is filled, the time window is outlined.
+  const baseButton =
+    "inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 " +
+    "text-base font-semibold transition-colors";
+  const filledButton = `${baseButton} bg-primary text-primary-foreground hover:bg-primary/90`;
+  const outlineButton =
+    `${baseButton} border-2 border-primary text-primary ` +
+    "hover:bg-primary hover:text-primary-foreground";
+
+  let message: string;
+  if (suggestion === undefined) {
+    message = "Looking for the latest captions…";
+  } else if (suggestion && suggestionLabel) {
+    message = isAuthenticated
+      ? `See the most recent ones in ${suggestionLabel}, or start one yourself.`
+      : `The most recent ones are in ${suggestionLabel}.`;
+  } else {
+    message = isAuthenticated
+      ? "Be the first: caption a photo and get voting."
+      : "Check back soon for new captions.";
+  }
 
   return (
     <div
-      className="mx-auto mt-6 flex max-w-md flex-col items-center gap-3 text-center"
+      className="mx-auto mt-6 flex max-w-lg flex-col items-center gap-3 text-center"
       aria-live="polite"
     >
       <p className="text-lg text-gray-900 dark:text-white">
         No captions have been voted up in the {label ?? "selected period"} yet.
       </p>
-      {suggestion === undefined && (
-        <p className="text-muted-foreground">Looking for the latest funny captions…</p>
-      )}
-      {suggestion && suggestionLabel && (
-        <>
-          <p className="text-muted-foreground">
-            The most recent ones are in {suggestionLabel}.
-          </p>
-          {filterHrefs[suggestion] ? (
-            <Link href={filterHrefs[suggestion]!} className={buttonClass}>
+      <p className="text-muted-foreground">{message}</p>
+      <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+        {suggestion &&
+          suggestionLabel &&
+          (filterHrefs[suggestion] ? (
+            <Link
+              href={filterHrefs[suggestion]!}
+              className={isAuthenticated ? outlineButton : filledButton}
+            >
               See {suggestionLabel}
             </Link>
           ) : (
-            <button type="button" onClick={() => onSelect(suggestion)} className={buttonClass}>
+            <button
+              type="button"
+              onClick={() => onSelect(suggestion)}
+              className={isAuthenticated ? outlineButton : filledButton}
+            >
               See {suggestionLabel}
             </button>
-          )}
-        </>
-      )}
-      {suggestion === null && (
-        <>
-          <p className="text-muted-foreground">Be the first: caption a photo and get voting.</p>
-          <Link href="/new" className={buttonClass}>
-            Caption a photo
+          ))}
+        {isAuthenticated && (
+          <Link href="/new" className={filledButton}>
+            <Plus className="h-4 w-4" aria-hidden="true" />
+            New Post
           </Link>
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 }
+
 
 export default function PopularCaptionsPageClient({
   initialFilter = "week",
@@ -198,6 +214,7 @@ export default function PopularCaptionsPageClient({
   initialUserVotes = {},
   initialIsAuthenticated = false,
   showIntro = false,
+  initialSuggestion,
 }: PopularCaptionsPageClientProps) {
   const [popularCaptions, setPopularCaptions] = useState<PopularCaption[]>(initialCaptions);
   const [userVotes, setUserVotes] = useState<Record<string, 1 | -1 | null>>(initialUserVotes);
@@ -618,6 +635,8 @@ export default function PopularCaptionsPageClient({
             filter={filter}
             filterHrefs={filterHrefs}
             onSelect={setFilter}
+            isAuthenticated={isAuthenticated}
+            initialSuggestion={filter === initialFilter ? initialSuggestion : undefined}
           />
         )
       ) : (
@@ -805,7 +824,7 @@ export default function PopularCaptionsPageClient({
       )}
 
       {/* New Post button (hides over the intro and the footer) */}
-      <NewPostButton />
+      {isAuthenticated && <NewPostButton />}
       {/* Login Prompt Modal */}
       <LoginPromptModal
         open={showLoginPrompt}

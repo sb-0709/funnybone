@@ -1,6 +1,7 @@
 import { fetchPopularCaptionsAction } from "@/app/actions/captions/fetch-popular-captions-action";
 import { fetchUserCaptionVotesAction } from "@/app/actions/captions";
 import { checkAuthStatusAction } from "@/app/actions/auth/check-auth-status";
+import { findCaptionWindowAction } from '@/app/actions/captions/find-caption-window-action'
 import PopularCaptionsPageClient from "@/components/popular-captions-page-client";
 
 type PopularCaptionsFilter = "all" | "year" | "past30" | "week";
@@ -31,18 +32,20 @@ export default async function PopularCaptionsPage({
   pastYearHref,
   allTimeHref,
 }: PopularCaptionsPageProps) {
-  const captions = (await fetchPopularCaptionsAction(
-    100,
-    initialFilter
-  )) as PopularCaption[];
-  const auth = await checkAuthStatusAction();
-  const isAuthenticated = auth.isAuthenticated && !auth.isAnonymous;
+  const captions = (await fetchPopularCaptionsAction(100, initialFilter)) as PopularCaption[]
+  const auth = await checkAuthStatusAction()
+  const isAuthenticated = auth.isAuthenticated && !auth.isAnonymous
 
-  let initialUserVotes: Record<string, 1 | -1 | null> = {};
+  let initialUserVotes: Record<string, 1 | -1 | null> = {}
   if (isAuthenticated && captions.length > 0) {
-    const captionIds = captions.map((caption) => caption.id);
-    initialUserVotes = await fetchUserCaptionVotesAction(captionIds);
+    const captionIds = captions.map((caption) => caption.id)
+    initialUserVotes = await fetchUserCaptionVotesAction(captionIds)
   }
+
+  // If this window is empty, work out which longer window to suggest now,
+  // so the "See ..." button is there as soon as the page loads.
+  const initialSuggestion =
+    captions.length === 0 ? await findCaptionWindowAction(initialFilter) : undefined
 
   return (
     <PopularCaptionsPageClient
@@ -55,6 +58,7 @@ export default async function PopularCaptionsPage({
       initialUserVotes={initialUserVotes}
       initialIsAuthenticated={isAuthenticated}
       showIntro={showIntro}
+      initialSuggestion={initialSuggestion}
     />
   )
 }

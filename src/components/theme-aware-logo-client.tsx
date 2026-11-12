@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { BrandImage } from "@/components/brand-image";
+import { Plus } from 'lucide-react'
 
 const brandName = process.env.NEXT_PUBLIC_BRAND_NAME || "Crackd.ai";
 
@@ -47,25 +48,27 @@ export function ThemeAwareLogoClient({ isAuthenticated }: ThemeAwareLogoClientPr
                     md:w-[105px] md:h-[105px] lg:w-[125px] lg:h-[125px]"
       >
         <Link href={logoHref} className="block w-full h-full">
-          <BrandImage
-            variant={logoVariant}
-            alt={brandName}
-            className="w-full h-full"
-          />
+          <BrandImage variant={logoVariant} alt={brandName} className="w-full h-full" />
         </Link>
       </div>
       {/* "New" - Primary action, grouped with logo */}
+      {/* "New Post" - primary action, grouped with the logo and styled as a button */}
       {isAuthenticated && (
         <Link
           href="/new"
+          aria-current={isNewActive ? 'page' : undefined}
           className={cn(
-            "hidden sm:block text-base font-medium transition-colors hover:text-primary",
-            isNewActive ? "text-primary" : "text-muted-foreground"
+            'hidden sm:inline-flex items-center gap-1.5 rounded-full border border-primary',
+            'px-4 py-1.5 text-base font-semibold transition-colors',
+            isNewActive
+              ? 'bg-primary text-primary-foreground'
+              : 'text-primary hover:bg-primary hover:text-primary-foreground'
           )}
         >
-          New
+          <Plus className="h-4 w-4" aria-hidden="true" />
+          New Post
         </Link>
       )}
     </div>
-  );
+  )
 }
