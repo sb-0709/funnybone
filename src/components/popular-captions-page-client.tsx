@@ -98,54 +98,94 @@ const FEATURED_LABELS: Record<PopularCaptionsFilter, string> = {
   all: '#1 of all time',
 }
 
-/** Next-wider time window to suggest when the current one is empty. */
-const WIDER_FILTER: Partial<Record<PopularCaptionsFilter, PopularCaptionsFilter>> = {
-  week: 'past30',
-  past30: 'year',
-  year: 'all',
-}
+/** Time windows from shortest to longest. */
+const FILTER_ORDER: PopularCaptionsFilter[] = ["week", "past30", "year", "all"];
 
+/**
+ * Shown when the selected time window has no captions. It checks the longer
+ * windows in order and suggests the first one that actually has captions, so
+ * the user never gets sent to another empty page.
+ */
 function EmptyWindow({
-  filter,
-  filterHrefs,
-  onSelect,
-}: {
-  filter: PopularCaptionsFilter
-  filterHrefs: Partial<Record<PopularCaptionsFilter, string>>
-  onSelect: (filter: PopularCaptionsFilter) => void
+                       filter,
+                       filterHrefs,
+                       onSelect,
+                     }: {
+  filter: PopularCaptionsFilter;
+  filterHrefs: Partial<Record<PopularCaptionsFilter, string>>;
+  onSelect: (filter: PopularCaptionsFilter) => void;
 }) {
-  const wider = WIDER_FILTER[filter]
-  const label = filterOptions.find((option) => option.key === filter)?.label.toLowerCase()
-  const widerLabel = filterOptions.find((option) => option.key === wider)?.label
+  // undefined = still checking, null = no longer window has captions
+  const [suggestion, setSuggestion] = useState<PopularCaptionsFilter | null | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    const findWindowWithCaptions = async () => {
+      const longer = FILTER_ORDER.slice(FILTER_ORDER.indexOf(filter) + 1);
+      for (const candidate of longer) {
+        try {
+          const captions = await fetchPopularCaptionsAction(1, candidate);
+          if (captions.length > 0) {
+            if (!cancelled) setSuggestion(candidate);
+            return;
+          }
+        } catch (error) {
+          console.error("Error checking time window:", error);
+        }
+      }
+      if (!cancelled) setSuggestion(null);
+    };
+    void findWindowWithCaptions();
+    return () => {
+      cancelled = true;
+    };
+  }, [filter]);
+
+  const label = filterOptions.find((option) => option.key === filter)?.label.toLowerCase();
+  const suggestionLabel = filterOptions.find((option) => option.key === suggestion)?.label;
   const buttonClass =
-    'inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 font-semibold ' +
-    'text-primary-foreground transition-colors hover:bg-primary/90'
+    "inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 font-semibold " +
+    "text-primary-foreground transition-colors hover:bg-primary/90";
 
   return (
-    <div className="mx-auto mt-6 flex max-w-md flex-col items-center gap-3 text-center">
+    <div
+      className="mx-auto mt-6 flex max-w-md flex-col items-center gap-3 text-center"
+      aria-live="polite"
+    >
       <p className="text-lg text-gray-900 dark:text-white">
-        No captions have been voted up in the {label ?? 'selected period'} yet.
+        No captions have been voted up in the {label ?? "selected period"} yet.
       </p>
-      {wider && widerLabel ? (
+      {suggestion === undefined && (
+        <p className="text-muted-foreground">Looking for the latest funny captions…</p>
+      )}
+      {suggestion && suggestionLabel && (
         <>
-          <p className="text-muted-foreground">The funniest from a longer period are waiting.</p>
-          {filterHrefs[wider] ? (
-            <Link href={filterHrefs[wider]!} className={buttonClass}>
-              See {widerLabel}
+          <p className="text-muted-foreground">
+            The most recent ones are in {suggestionLabel}.
+          </p>
+          {filterHrefs[suggestion] ? (
+            <Link href={filterHrefs[suggestion]!} className={buttonClass}>
+              See {suggestionLabel}
             </Link>
           ) : (
-            <button type="button" onClick={() => onSelect(wider)} className={buttonClass}>
-              See {widerLabel}
+            <button type="button" onClick={() => onSelect(suggestion)} className={buttonClass}>
+              See {suggestionLabel}
             </button>
           )}
         </>
-      ) : (
-        <Link href="/new" className={buttonClass}>
-          Caption a photo
-        </Link>
+      )}
+      {suggestion === null && (
+        <>
+          <p className="text-muted-foreground">Be the first: caption a photo and get voting.</p>
+          <Link href="/new" className={buttonClass}>
+            Caption a photo
+          </Link>
+        </>
       )}
     </div>
-  )
+  );
 }
 
 export default function PopularCaptionsPageClient({
@@ -573,7 +613,12 @@ export default function PopularCaptionsPageClient({
             Loading captions…
           </p>
         ) : (
-          <EmptyWindow filter={filter} filterHrefs={filterHrefs} onSelect={setFilter} />
+          <EmptyWindow
+            key={filter}
+            filter={filter}
+            filterHrefs={filterHrefs}
+            onSelect={setFilter}
+          />
         )
       ) : (
         <div
