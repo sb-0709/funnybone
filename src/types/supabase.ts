@@ -10,10 +10,61 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.4"
+    PostgrestVersion: '13.0.4'
   }
   public: {
     Tables: {
+      crackd_caption_jobs: {
+        Row: {
+          caption_ids: string[]
+          completed: number
+          completed_steps: number
+          created_at: string
+          error: string | null
+          failed: number
+          id: string
+          idempotency_key: string
+          image_id: string
+          profile_id: string
+          status: string
+          total: number
+          total_steps: number
+          updated_at: string
+        }
+        Insert: {
+          caption_ids?: string[]
+          completed?: number
+          completed_steps?: number
+          created_at?: string
+          error?: string | null
+          failed?: number
+          id?: string
+          idempotency_key: string
+          image_id: string
+          profile_id: string
+          status?: string
+          total?: number
+          total_steps?: number
+          updated_at?: string
+        }
+        Update: {
+          caption_ids?: string[]
+          completed?: number
+          completed_steps?: number
+          created_at?: string
+          error?: string | null
+          failed?: number
+          id?: string
+          idempotency_key?: string
+          image_id?: string
+          profile_id?: string
+          status?: string
+          total?: number
+          total_steps?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       caption_showdown_picks: {
         Row: {
           created_at: string
@@ -101,18 +152,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "allowed_signup_domains_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'allowed_signup_domains_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "allowed_signup_domains_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'allowed_signup_domains_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -149,25 +200,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bug_reports_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'bug_reports_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "bug_reports_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'bug_reports_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "bug_reports_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'bug_reports_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -210,25 +261,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "caption_examples_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'caption_examples_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "caption_examples_image_id_fkey"
-            columns: ["image_id"]
+            foreignKeyName: 'caption_examples_image_id_fkey'
+            columns: ['image_id']
             isOneToOne: false
-            referencedRelation: "images"
-            referencedColumns: ["id"]
+            referencedRelation: 'images'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "caption_examples_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'caption_examples_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -262,32 +313,32 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "caption_requests_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'caption_requests_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "caption_requests_image_id_fkey"
-            columns: ["image_id"]
+            foreignKeyName: 'caption_requests_image_id_fkey'
+            columns: ['image_id']
             isOneToOne: false
-            referencedRelation: "images"
-            referencedColumns: ["id"]
+            referencedRelation: 'images'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "caption_requests_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'caption_requests_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "caption_requests_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'caption_requests_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -321,39 +372,39 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "caption_saved_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'caption_saved_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "captions"
-            referencedColumns: ["id"]
+            referencedRelation: 'captions'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "caption_saved_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'caption_saved_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "v_richest_image_dedup"
-            referencedColumns: ["caption_id"]
+            referencedRelation: 'v_richest_image_dedup'
+            referencedColumns: ['caption_id']
           },
           {
-            foreignKeyName: "caption_saved_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'caption_saved_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "caption_saved_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'caption_saved_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "caption_saved_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'caption_saved_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -393,39 +444,39 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "caption_votes_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'caption_votes_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "captions"
-            referencedColumns: ["id"]
+            referencedRelation: 'captions'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "caption_votes_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'caption_votes_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "v_richest_image_dedup"
-            referencedColumns: ["caption_id"]
+            referencedRelation: 'v_richest_image_dedup'
+            referencedColumns: ['caption_id']
           },
           {
-            foreignKeyName: "caption_votes_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'caption_votes_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "caption_votes_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'caption_votes_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "caption_votes_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'caption_votes_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -480,53 +531,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "captions_caption_request_id_fkey"
-            columns: ["caption_request_id"]
+            foreignKeyName: 'captions_caption_request_id_fkey'
+            columns: ['caption_request_id']
             isOneToOne: false
-            referencedRelation: "caption_requests"
-            referencedColumns: ["id"]
+            referencedRelation: 'caption_requests'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "captions_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'captions_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "captions_humor_flavor_id_fkey"
-            columns: ["humor_flavor_id"]
+            foreignKeyName: 'captions_humor_flavor_id_fkey'
+            columns: ['humor_flavor_id']
             isOneToOne: false
-            referencedRelation: "humor_flavors"
-            referencedColumns: ["id"]
+            referencedRelation: 'humor_flavors'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "captions_image_id_fkey"
-            columns: ["image_id"]
+            foreignKeyName: 'captions_image_id_fkey'
+            columns: ['image_id']
             isOneToOne: false
-            referencedRelation: "images"
-            referencedColumns: ["id"]
+            referencedRelation: 'images'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "captions_llm_prompt_chain_id_fkey"
-            columns: ["llm_prompt_chain_id"]
+            foreignKeyName: 'captions_llm_prompt_chain_id_fkey'
+            columns: ['llm_prompt_chain_id']
             isOneToOne: false
-            referencedRelation: "llm_prompt_chains"
-            referencedColumns: ["id"]
+            referencedRelation: 'llm_prompt_chains'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "captions_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'captions_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "captions_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'captions_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -557,18 +608,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "common_use_categories_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'common_use_categories_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "common_use_categories_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'common_use_categories_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -602,32 +653,32 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "common_use_category_image_mappings_common_use_category_id_fkey"
-            columns: ["common_use_category_id"]
+            foreignKeyName: 'common_use_category_image_mappings_common_use_category_id_fkey'
+            columns: ['common_use_category_id']
             isOneToOne: false
-            referencedRelation: "common_use_categories"
-            referencedColumns: ["id"]
+            referencedRelation: 'common_use_categories'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "common_use_category_image_mappings_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'common_use_category_image_mappings_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "common_use_category_image_mappings_image_id_fkey"
-            columns: ["image_id"]
+            foreignKeyName: 'common_use_category_image_mappings_image_id_fkey'
+            columns: ['image_id']
             isOneToOne: false
-            referencedRelation: "images"
-            referencedColumns: ["id"]
+            referencedRelation: 'images'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "common_use_category_image_mappings_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'common_use_category_image_mappings_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -658,18 +709,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "communities_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'communities_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "communities_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'communities_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -703,32 +754,32 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "community_context_tag_mappings_community_context_id_fkey"
-            columns: ["community_context_id"]
+            foreignKeyName: 'community_context_tag_mappings_community_context_id_fkey'
+            columns: ['community_context_id']
             isOneToOne: false
-            referencedRelation: "community_contexts"
-            referencedColumns: ["id"]
+            referencedRelation: 'community_contexts'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "community_context_tag_mappings_community_context_tag_id_fkey"
-            columns: ["community_context_tag_id"]
+            foreignKeyName: 'community_context_tag_mappings_community_context_tag_id_fkey'
+            columns: ['community_context_tag_id']
             isOneToOne: false
-            referencedRelation: "community_context_tags"
-            referencedColumns: ["id"]
+            referencedRelation: 'community_context_tags'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "community_context_tag_mappings_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'community_context_tag_mappings_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "community_context_tag_mappings_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'community_context_tag_mappings_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -759,18 +810,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "community_context_tags_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'community_context_tags_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "community_context_tags_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'community_context_tags_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -816,25 +867,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "community_contexts_community_id_fkey"
-            columns: ["community_id"]
+            foreignKeyName: 'community_contexts_community_id_fkey'
+            columns: ['community_id']
             isOneToOne: false
-            referencedRelation: "communities"
-            referencedColumns: ["id"]
+            referencedRelation: 'communities'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "community_contexts_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'community_contexts_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "community_contexts_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'community_contexts_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -877,25 +928,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "dorms_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'dorms_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "dorms_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'dorms_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "dorms_university_id_fkey"
-            columns: ["university_id"]
+            foreignKeyName: 'dorms_university_id_fkey'
+            columns: ['university_id']
             isOneToOne: false
-            referencedRelation: "universities"
-            referencedColumns: ["id"]
+            referencedRelation: 'universities'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -929,25 +980,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "humor_flavor_mix_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'humor_flavor_mix_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_flavor_mix_humor_flavor_id_fkey"
-            columns: ["humor_flavor_id"]
+            foreignKeyName: 'humor_flavor_mix_humor_flavor_id_fkey'
+            columns: ['humor_flavor_id']
             isOneToOne: false
-            referencedRelation: "humor_flavors"
-            referencedColumns: ["id"]
+            referencedRelation: 'humor_flavors'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_flavor_mix_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'humor_flavor_mix_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -984,18 +1035,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "humor_flavor_step_types_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'humor_flavor_step_types_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_flavor_step_types_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'humor_flavor_step_types_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1053,53 +1104,53 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "humor_flavor_steps_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'humor_flavor_steps_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_flavor_steps_humor_flavor_id_fkey"
-            columns: ["humor_flavor_id"]
+            foreignKeyName: 'humor_flavor_steps_humor_flavor_id_fkey'
+            columns: ['humor_flavor_id']
             isOneToOne: false
-            referencedRelation: "humor_flavors"
-            referencedColumns: ["id"]
+            referencedRelation: 'humor_flavors'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_flavor_steps_humor_flavor_step_id_fkey"
-            columns: ["humor_flavor_step_type_id"]
+            foreignKeyName: 'humor_flavor_steps_humor_flavor_step_id_fkey'
+            columns: ['humor_flavor_step_type_id']
             isOneToOne: false
-            referencedRelation: "humor_flavor_step_types"
-            referencedColumns: ["id"]
+            referencedRelation: 'humor_flavor_step_types'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_flavor_steps_llm_input_type_id_fkey"
-            columns: ["llm_input_type_id"]
+            foreignKeyName: 'humor_flavor_steps_llm_input_type_id_fkey'
+            columns: ['llm_input_type_id']
             isOneToOne: false
-            referencedRelation: "llm_input_types"
-            referencedColumns: ["id"]
+            referencedRelation: 'llm_input_types'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_flavor_steps_llm_model_id_fkey"
-            columns: ["llm_model_id"]
+            foreignKeyName: 'humor_flavor_steps_llm_model_id_fkey'
+            columns: ['llm_model_id']
             isOneToOne: false
-            referencedRelation: "llm_models"
-            referencedColumns: ["id"]
+            referencedRelation: 'llm_models'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_flavor_steps_llm_output_type_id_fkey"
-            columns: ["llm_output_type_id"]
+            foreignKeyName: 'humor_flavor_steps_llm_output_type_id_fkey'
+            columns: ['llm_output_type_id']
             isOneToOne: false
-            referencedRelation: "llm_output_types"
-            referencedColumns: ["id"]
+            referencedRelation: 'llm_output_types'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_flavor_steps_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'humor_flavor_steps_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1133,32 +1184,32 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "humor_flavor_theme_mappings_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'humor_flavor_theme_mappings_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_flavor_theme_mappings_humor_flavor_id_fkey"
-            columns: ["humor_flavor_id"]
+            foreignKeyName: 'humor_flavor_theme_mappings_humor_flavor_id_fkey'
+            columns: ['humor_flavor_id']
             isOneToOne: false
-            referencedRelation: "humor_flavors"
-            referencedColumns: ["id"]
+            referencedRelation: 'humor_flavors'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_flavor_theme_mappings_humor_theme_id_fkey"
-            columns: ["humor_theme_id"]
+            foreignKeyName: 'humor_flavor_theme_mappings_humor_theme_id_fkey'
+            columns: ['humor_theme_id']
             isOneToOne: false
-            referencedRelation: "humor_themes"
-            referencedColumns: ["id"]
+            referencedRelation: 'humor_themes'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_flavor_theme_mappings_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'humor_flavor_theme_mappings_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1195,18 +1246,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "humor_flavors_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'humor_flavors_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_flavors_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'humor_flavors_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1240,18 +1291,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "humor_themes_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'humor_themes_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "humor_themes_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'humor_themes_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1303,25 +1354,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "images_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'images_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "images_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'images_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "images_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'images_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1364,25 +1415,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "invitations_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'invitations_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "invitations_inviter_id_fkey"
-            columns: ["inviter_id"]
+            foreignKeyName: 'invitations_inviter_id_fkey'
+            columns: ['inviter_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "invitations_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'invitations_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1446,18 +1497,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "link_redirects_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'link_redirects_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "link_redirects_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'link_redirects_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1491,18 +1542,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "llm_input_types_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'llm_input_types_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_input_types_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'llm_input_types_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1563,60 +1614,60 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "llm_model_responses_caption_request_id_fkey"
-            columns: ["caption_request_id"]
+            foreignKeyName: 'llm_model_responses_caption_request_id_fkey'
+            columns: ['caption_request_id']
             isOneToOne: false
-            referencedRelation: "caption_requests"
-            referencedColumns: ["id"]
+            referencedRelation: 'caption_requests'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_model_responses_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'llm_model_responses_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_model_responses_humor_flavor_id_fkey"
-            columns: ["humor_flavor_id"]
+            foreignKeyName: 'llm_model_responses_humor_flavor_id_fkey'
+            columns: ['humor_flavor_id']
             isOneToOne: false
-            referencedRelation: "humor_flavors"
-            referencedColumns: ["id"]
+            referencedRelation: 'humor_flavors'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_model_responses_humor_flavor_step_id_fkey"
-            columns: ["humor_flavor_step_id"]
+            foreignKeyName: 'llm_model_responses_humor_flavor_step_id_fkey'
+            columns: ['humor_flavor_step_id']
             isOneToOne: false
-            referencedRelation: "humor_flavor_steps"
-            referencedColumns: ["id"]
+            referencedRelation: 'humor_flavor_steps'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_model_responses_llm_model_id_fkey"
-            columns: ["llm_model_id"]
+            foreignKeyName: 'llm_model_responses_llm_model_id_fkey'
+            columns: ['llm_model_id']
             isOneToOne: false
-            referencedRelation: "llm_models"
-            referencedColumns: ["id"]
+            referencedRelation: 'llm_models'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_model_responses_llm_prompt_chain_id_fkey"
-            columns: ["llm_prompt_chain_id"]
+            foreignKeyName: 'llm_model_responses_llm_prompt_chain_id_fkey'
+            columns: ['llm_prompt_chain_id']
             isOneToOne: false
-            referencedRelation: "llm_prompt_chains"
-            referencedColumns: ["id"]
+            referencedRelation: 'llm_prompt_chains'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_model_responses_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'llm_model_responses_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_model_responses_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'llm_model_responses_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1656,25 +1707,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "llm_models_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'llm_models_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_models_llm_provider_id_fkey"
-            columns: ["llm_provider_id"]
+            foreignKeyName: 'llm_models_llm_provider_id_fkey'
+            columns: ['llm_provider_id']
             isOneToOne: false
-            referencedRelation: "llm_providers"
-            referencedColumns: ["id"]
+            referencedRelation: 'llm_providers'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_models_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'llm_models_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1708,18 +1759,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "llm_output_types_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'llm_output_types_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_output_types_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'llm_output_types_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1750,25 +1801,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "llm_prompt_chains_caption_request_id_fkey"
-            columns: ["caption_request_id"]
+            foreignKeyName: 'llm_prompt_chains_caption_request_id_fkey'
+            columns: ['caption_request_id']
             isOneToOne: false
-            referencedRelation: "caption_requests"
-            referencedColumns: ["id"]
+            referencedRelation: 'caption_requests'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_prompt_chains_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'llm_prompt_chains_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_prompt_chains_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'llm_prompt_chains_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1799,18 +1850,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "llm_providers_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'llm_providers_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "llm_providers_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'llm_providers_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1847,25 +1898,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "news_entities_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'news_entities_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "news_entities_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'news_entities_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "news_entities_news_id_fkey"
-            columns: ["news_id"]
+            foreignKeyName: 'news_entities_news_id_fkey'
+            columns: ['news_id']
             isOneToOne: false
-            referencedRelation: "news_snippets"
-            referencedColumns: ["id"]
+            referencedRelation: 'news_snippets'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1911,18 +1962,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "news_snippets_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'news_snippets_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "news_snippets_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'news_snippets_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1953,18 +2004,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "personalities_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'personalities_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "personalities_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'personalities_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2004,32 +2055,32 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "profile_dorm_mappings_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'profile_dorm_mappings_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "profile_dorm_mappings_dorm_id_fkey"
-            columns: ["dorm_id"]
+            foreignKeyName: 'profile_dorm_mappings_dorm_id_fkey'
+            columns: ['dorm_id']
             isOneToOne: false
-            referencedRelation: "dorms"
-            referencedColumns: ["id"]
+            referencedRelation: 'dorms'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "profile_dorm_mappings_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'profile_dorm_mappings_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "profile_dorm_mappings_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'profile_dorm_mappings_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2063,32 +2114,32 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "profile_university_major_mappings_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'profile_university_major_mappings_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "profile_university_major_mappings_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'profile_university_major_mappings_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "profile_university_major_mappings_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'profile_university_major_mappings_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "profile_university_major_mappings_university_major_id_fkey"
-            columns: ["university_major_id"]
+            foreignKeyName: 'profile_university_major_mappings_university_major_id_fkey'
+            columns: ['university_major_id']
             isOneToOne: false
-            referencedRelation: "university_major_mappings"
-            referencedColumns: ["id"]
+            referencedRelation: 'university_major_mappings'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2128,32 +2179,32 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "profile_university_mappings_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'profile_university_mappings_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "profile_university_mappings_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'profile_university_mappings_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "profile_university_mappings_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'profile_university_mappings_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "profile_university_mappings_university_id_fkey"
-            columns: ["university_id"]
+            foreignKeyName: 'profile_university_mappings_university_id_fkey'
+            columns: ['university_id']
             isOneToOne: false
-            referencedRelation: "universities"
-            referencedColumns: ["id"]
+            referencedRelation: 'universities'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2199,18 +2250,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "profiles_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'profiles_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "profiles_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'profiles_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2247,39 +2298,39 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "reported_captions_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'reported_captions_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "captions"
-            referencedColumns: ["id"]
+            referencedRelation: 'captions'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "reported_captions_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'reported_captions_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "v_richest_image_dedup"
-            referencedColumns: ["caption_id"]
+            referencedRelation: 'v_richest_image_dedup'
+            referencedColumns: ['caption_id']
           },
           {
-            foreignKeyName: "reported_captions_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'reported_captions_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "reported_captions_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'reported_captions_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "reported_captions_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'reported_captions_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2316,32 +2367,32 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "reported_images_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'reported_images_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "reported_images_image_id_fkey"
-            columns: ["image_id"]
+            foreignKeyName: 'reported_images_image_id_fkey'
+            columns: ['image_id']
             isOneToOne: false
-            referencedRelation: "images"
-            referencedColumns: ["id"]
+            referencedRelation: 'images'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "reported_images_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'reported_images_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "reported_images_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'reported_images_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2375,39 +2426,39 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "screenshots_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'screenshots_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "captions"
-            referencedColumns: ["id"]
+            referencedRelation: 'captions'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "screenshots_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'screenshots_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "v_richest_image_dedup"
-            referencedColumns: ["caption_id"]
+            referencedRelation: 'v_richest_image_dedup'
+            referencedColumns: ['caption_id']
           },
           {
-            foreignKeyName: "screenshots_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'screenshots_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "screenshots_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'screenshots_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "screenshots_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'screenshots_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2438,18 +2489,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "share_to_destinations_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'share_to_destinations_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "share_to_destinations_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'share_to_destinations_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2489,46 +2540,46 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "shares_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'shares_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "captions"
-            referencedColumns: ["id"]
+            referencedRelation: 'captions'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "shares_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'shares_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "v_richest_image_dedup"
-            referencedColumns: ["caption_id"]
+            referencedRelation: 'v_richest_image_dedup'
+            referencedColumns: ['caption_id']
           },
           {
-            foreignKeyName: "shares_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'shares_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "shares_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'shares_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "shares_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'shares_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "shares_share_to_destination_id_fkey"
-            columns: ["share_to_destination_id"]
+            foreignKeyName: 'shares_share_to_destination_id_fkey'
+            columns: ['share_to_destination_id']
             isOneToOne: false
-            referencedRelation: "share_to_destinations"
-            referencedColumns: ["id"]
+            referencedRelation: 'share_to_destinations'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2565,18 +2616,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "sidechat_posts_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'sidechat_posts_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "sidechat_posts_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'sidechat_posts_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2619,18 +2670,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "studies_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'studies_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "studies_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'studies_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2664,39 +2715,39 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "study_caption_mappings_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'study_caption_mappings_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "captions"
-            referencedColumns: ["id"]
+            referencedRelation: 'captions'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "study_caption_mappings_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'study_caption_mappings_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "v_richest_image_dedup"
-            referencedColumns: ["caption_id"]
+            referencedRelation: 'v_richest_image_dedup'
+            referencedColumns: ['caption_id']
           },
           {
-            foreignKeyName: "study_caption_mappings_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'study_caption_mappings_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "study_caption_mappings_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'study_caption_mappings_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "study_caption_mappings_study_id_fkey"
-            columns: ["study_id"]
+            foreignKeyName: 'study_caption_mappings_study_id_fkey'
+            columns: ['study_id']
             isOneToOne: false
-            referencedRelation: "studies"
-            referencedColumns: ["id"]
+            referencedRelation: 'studies'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2707,12 +2758,12 @@ export type Database = {
           created_by_user_id: string
           created_datetime_utc: string
           id: number
-          input_method: Database["public"]["Enums"]["study_vote_input_method"]
+          input_method: Database['public']['Enums']['study_vote_input_method']
           profile_id: string
           session_id: string | null
           study_caption_mapping_id: number | null
           time_to_vote_ms: number | null
-          vote_value: Database["public"]["Enums"]["study_vote_value"]
+          vote_value: Database['public']['Enums']['study_vote_value']
         }
         Insert: {
           caption_id: string
@@ -2720,12 +2771,12 @@ export type Database = {
           created_by_user_id?: string
           created_datetime_utc?: string
           id?: number
-          input_method: Database["public"]["Enums"]["study_vote_input_method"]
+          input_method: Database['public']['Enums']['study_vote_input_method']
           profile_id: string
           session_id?: string | null
           study_caption_mapping_id?: number | null
           time_to_vote_ms?: number | null
-          vote_value: Database["public"]["Enums"]["study_vote_value"]
+          vote_value: Database['public']['Enums']['study_vote_value']
         }
         Update: {
           caption_id?: string
@@ -2733,48 +2784,48 @@ export type Database = {
           created_by_user_id?: string
           created_datetime_utc?: string
           id?: number
-          input_method?: Database["public"]["Enums"]["study_vote_input_method"]
+          input_method?: Database['public']['Enums']['study_vote_input_method']
           profile_id?: string
           session_id?: string | null
           study_caption_mapping_id?: number | null
           time_to_vote_ms?: number | null
-          vote_value?: Database["public"]["Enums"]["study_vote_value"]
+          vote_value?: Database['public']['Enums']['study_vote_value']
         }
         Relationships: [
           {
-            foreignKeyName: "study_caption_vote_events_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'study_caption_vote_events_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "captions"
-            referencedColumns: ["id"]
+            referencedRelation: 'captions'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "study_caption_vote_events_caption_id_fkey"
-            columns: ["caption_id"]
+            foreignKeyName: 'study_caption_vote_events_caption_id_fkey'
+            columns: ['caption_id']
             isOneToOne: false
-            referencedRelation: "v_richest_image_dedup"
-            referencedColumns: ["caption_id"]
+            referencedRelation: 'v_richest_image_dedup'
+            referencedColumns: ['caption_id']
           },
           {
-            foreignKeyName: "study_caption_vote_events_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'study_caption_vote_events_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "study_caption_vote_events_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: 'study_caption_vote_events_profile_id_fkey'
+            columns: ['profile_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "study_caption_vote_events_study_caption_mapping_id_fkey"
-            columns: ["study_caption_mapping_id"]
+            foreignKeyName: 'study_caption_vote_events_study_caption_mapping_id_fkey'
+            columns: ['study_caption_mapping_id']
             isOneToOne: false
-            referencedRelation: "study_caption_mappings"
-            referencedColumns: ["id"]
+            referencedRelation: 'study_caption_mappings'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2808,32 +2859,32 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "study_image_set_image_mappings_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'study_image_set_image_mappings_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "study_image_set_image_mappings_image_id_fkey"
-            columns: ["image_id"]
+            foreignKeyName: 'study_image_set_image_mappings_image_id_fkey'
+            columns: ['image_id']
             isOneToOne: false
-            referencedRelation: "images"
-            referencedColumns: ["id"]
+            referencedRelation: 'images'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "study_image_set_image_mappings_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'study_image_set_image_mappings_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "study_image_set_image_mappings_study_image_set_id_fkey"
-            columns: ["study_image_set_id"]
+            foreignKeyName: 'study_image_set_image_mappings_study_image_set_id_fkey'
+            columns: ['study_image_set_id']
             isOneToOne: false
-            referencedRelation: "study_image_sets"
-            referencedColumns: ["id"]
+            referencedRelation: 'study_image_sets'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2867,18 +2918,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "study_image_sets_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'study_image_sets_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "study_image_sets_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'study_image_sets_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2909,18 +2960,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "term_types_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'term_types_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "term_types_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'term_types_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -2963,25 +3014,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "terms_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'terms_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "terms_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'terms_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "terms_term_type_id_fkey"
-            columns: ["term_type_id"]
+            foreignKeyName: 'terms_term_type_id_fkey'
+            columns: ['term_type_id']
             isOneToOne: false
-            referencedRelation: "term_types"
-            referencedColumns: ["id"]
+            referencedRelation: 'term_types'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3012,18 +3063,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "testflight_errors_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'testflight_errors_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "testflight_errors_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'testflight_errors_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3057,32 +3108,32 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "transcript_personality_mappings_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'transcript_personality_mappings_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "transcript_personality_mappings_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'transcript_personality_mappings_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "transcript_personality_mappings_personality_id_fkey"
-            columns: ["personality_id"]
+            foreignKeyName: 'transcript_personality_mappings_personality_id_fkey'
+            columns: ['personality_id']
             isOneToOne: false
-            referencedRelation: "personalities"
-            referencedColumns: ["id"]
+            referencedRelation: 'personalities'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "transcript_personality_mappings_transcript_id_fkey"
-            columns: ["transcript_id"]
+            foreignKeyName: 'transcript_personality_mappings_transcript_id_fkey'
+            columns: ['transcript_id']
             isOneToOne: false
-            referencedRelation: "transcripts"
-            referencedColumns: ["id"]
+            referencedRelation: 'transcripts'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3113,18 +3164,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "transcripts_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'transcripts_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "transcripts_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'transcripts_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3161,18 +3212,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "universities_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'universities_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "universities_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'universities_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3206,32 +3257,32 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "university_major_mappings_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'university_major_mappings_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "university_major_mappings_major_id_fkey"
-            columns: ["major_id"]
+            foreignKeyName: 'university_major_mappings_major_id_fkey'
+            columns: ['major_id']
             isOneToOne: false
-            referencedRelation: "university_majors"
-            referencedColumns: ["id"]
+            referencedRelation: 'university_majors'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "university_major_mappings_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'university_major_mappings_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "university_major_mappings_university_id_fkey"
-            columns: ["university_id"]
+            foreignKeyName: 'university_major_mappings_university_id_fkey'
+            columns: ['university_id']
             isOneToOne: false
-            referencedRelation: "universities"
-            referencedColumns: ["id"]
+            referencedRelation: 'universities'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3262,18 +3313,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "university_majors_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'university_majors_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "university_majors_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'university_majors_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3337,18 +3388,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "whitelist_email_addresses_created_by_user_id_fkey"
-            columns: ["created_by_user_id"]
+            foreignKeyName: 'whitelist_email_addresses_created_by_user_id_fkey'
+            columns: ['created_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "whitelist_email_addresses_modified_by_user_id_fkey"
-            columns: ["modified_by_user_id"]
+            foreignKeyName: 'whitelist_email_addresses_modified_by_user_id_fkey'
+            columns: ['modified_by_user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3363,11 +3414,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "captions_image_id_fkey"
-            columns: ["image_id"]
+            foreignKeyName: 'captions_image_id_fkey'
+            columns: ['image_id']
             isOneToOne: false
-            referencedRelation: "images"
-            referencedColumns: ["id"]
+            referencedRelation: 'images'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -3466,26 +3517,26 @@ export type Database = {
             Args: { target_caption_id: string }
             Returns: {
               error: true
-            } & "Could not choose the best candidate function between: public.can_access_caption(target_caption_id => text), public.can_access_caption(target_caption_id => uuid). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+            } & 'Could not choose the best candidate function between: public.can_access_caption(target_caption_id => text), public.can_access_caption(target_caption_id => uuid). Try renaming the parameters or the function itself in the database so function overloading can be resolved'
           }
         | {
             Args: { target_caption_id: string }
             Returns: {
               error: true
-            } & "Could not choose the best candidate function between: public.can_access_caption(target_caption_id => text), public.can_access_caption(target_caption_id => uuid). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+            } & 'Could not choose the best candidate function between: public.can_access_caption(target_caption_id => text), public.can_access_caption(target_caption_id => uuid). Try renaming the parameters or the function itself in the database so function overloading can be resolved'
           }
       can_access_image:
         | {
             Args: { target_image_id: string }
             Returns: {
               error: true
-            } & "Could not choose the best candidate function between: public.can_access_image(target_image_id => text), public.can_access_image(target_image_id => uuid). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+            } & 'Could not choose the best candidate function between: public.can_access_image(target_image_id => text), public.can_access_image(target_image_id => uuid). Try renaming the parameters or the function itself in the database so function overloading can be resolved'
           }
         | {
             Args: { target_image_id: string }
             Returns: {
               error: true
-            } & "Could not choose the best candidate function between: public.can_access_image(target_image_id => text), public.can_access_image(target_image_id => uuid). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+            } & 'Could not choose the best candidate function between: public.can_access_image(target_image_id => text), public.can_access_image(target_image_id => uuid). Try renaming the parameters or the function itself in the database so function overloading can be resolved'
           }
       can_access_invitation_by_token: {
         Args: { target_token: string }
@@ -3520,13 +3571,13 @@ export type Database = {
             Args: { user_id: string }
             Returns: {
               error: true
-            } & "Could not choose the best candidate function between: public.is_superadmin(user_id => text), public.is_superadmin(user_id => uuid). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+            } & 'Could not choose the best candidate function between: public.is_superadmin(user_id => text), public.is_superadmin(user_id => uuid). Try renaming the parameters or the function itself in the database so function overloading can be resolved'
           }
         | {
             Args: { user_id: string }
             Returns: {
               error: true
-            } & "Could not choose the best candidate function between: public.is_superadmin(user_id => text), public.is_superadmin(user_id => uuid). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+            } & 'Could not choose the best candidate function between: public.is_superadmin(user_id => text), public.is_superadmin(user_id => uuid). Try renaming the parameters or the function itself in the database so function overloading can be resolved'
           }
       is_valid_category_image_mapping:
         | { Args: { category_id: number; img_id: string }; Returns: boolean }
@@ -3548,14 +3599,14 @@ export type Database = {
       smart_deactivate_news: { Args: never; Returns: undefined }
     }
     Enums: {
-      study_vote_input_method: "button" | "swipe" | "keyboard" | "unknown"
+      study_vote_input_method: 'button' | 'swipe' | 'keyboard' | 'unknown'
       study_vote_value:
-        | "didnt get it"
-        | "not funny at all"
-        | "not very funny"
-        | "meh"
-        | "funny"
-        | "very funny"
+        | 'didnt get it'
+        | 'not funny at all'
+        | 'not very funny'
+        | 'meh'
+        | 'funny'
+        | 'very funny'
     }
     CompositeTypes: {
       [_ in never]: never

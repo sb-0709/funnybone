@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-
+import { X } from 'lucide-react'
 import LoadingScreen from '@/components/LoadingScreen'
 import { CaptionViewV2 } from '@/components/ui/caption-view-v2'
 import { useToast } from '@/hooks/use-toast'
+import { friendlyCaptionError } from '@/utils/caption-errors'
 import { toggleCaptionSave } from '@/utils/toggle-caption-save'
 import { loadSavedCaptionIds } from '@/utils/saved-caption-ids'
 import { checkAuthStatusAction } from '@/app/actions/auth/check-auth-status'
@@ -95,14 +96,22 @@ export function ImageCaptionsPageClient({
       operation.fail(error)
       if (!operation.isCurrent()) return
       console.error('Error generating more captions:', error)
+      const friendly = friendlyCaptionError(error)
       toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to generate captions.',
+        title: friendly.title,
+        description: friendly.description,
       })
     } finally {
       operation.finish()
     }
   }
+
+  const handlePublicChange = (captionId: string, isPublic: boolean) =>
+    setRoasts((prev) =>
+      prev.map((caption) =>
+        caption.id === captionId ? { ...caption, is_public: isPublic } : caption
+      )
+    )
 
   const handleSlideBookmark = (captionId: string) =>
     toggleCaptionSave({
@@ -156,24 +165,39 @@ export function ImageCaptionsPageClient({
           } else {
             const generatedCaptions = await generateCaptions(imageId, {
               ...operation,
-              onPartialFailure: () => operation.isCurrent() && toast({
-                title: 'Some captions are ready',
-                description: 'Some humor flavors could not finish. Showing successful captions.',
-              }),
+              onPartialFailure: () =>
+                operation.isCurrent() &&
+                toast({
+                  title: 'Some captions are ready',
+                  description: 'Some humor flavors could not finish. Showing successful captions.',
+                }),
             })
             captions = [...popularCaptionsToSet, ...generatedCaptions].slice(0, target)
           }
 
           if (operation.isCurrent()) setPopularOffset(captions.length)
         } else {
-          captions = await generateCaptions(imageId, {
-            ...operation,
-            onPartialFailure: () => operation.isCurrent() && toast({
-              title: 'Some captions are ready',
-              description: 'Some humor flavors could not finish. Showing successful captions.',
-            }),
-          })
-          captions = captions.slice(0, target)
+          // Your own photo: show the captions it already has (posted ones first)
+          // instead of writing a new batch on every visit. "Crack Again" adds more.
+          const existing = ((await fetchPopularCaptionsByImageIdAction(imageId)) ?? [])
+            .map(normalizeCaption)
+            .sort((a, b) => Number(b.is_public) - Number(a.is_public))
+          operation.signal.throwIfAborted()
+
+          if (existing.length > 0) {
+            captions = existing
+          } else {
+            captions = await generateCaptions(imageId, {
+              ...operation,
+              onPartialFailure: () =>
+                operation.isCurrent() &&
+                toast({
+                  title: 'Some captions are ready',
+                  description: 'Some humor flavors could not finish. Showing successful captions.',
+                }),
+            })
+            captions = captions.slice(0, target)
+          }
         }
 
         operation.complete(captions)
@@ -210,7 +234,17 @@ export function ImageCaptionsPageClient({
       )}
 
       {roasts.length > 0 && !isLoading && (
-        <div className="w-full max-w-[650px] mx-auto px-4">
+        <div className="relative w-full max-w-[650px] mx-auto px-4">
+          <button
+            onClick={() => router.push('/my-images')}
+            className="absolute right-2 top-0 z-10 flex h-11 w-11 items-center justify-center
+              rounded-full text-foreground/70 transition-colors hover:bg-foreground/10
+              hover:text-foreground"
+            aria-label="Close and go to your images"
+            title="Close"
+          >
+            <X className="h-7 w-7" />
+          </button>
           <CaptionViewV2
             key={roasts[currentCaptionIndex].id}
             id={roasts[currentCaptionIndex].id}
@@ -229,6 +263,8 @@ export function ImageCaptionsPageClient({
             hasNext={currentCaptionIndex < roasts.length - 1}
             currentIndex={currentCaptionIndex}
             totalCount={roasts.length}
+            postedStates={roasts.map((caption) => caption.is_public)}
+            onPublicChange={handlePublicChange}
           />
 
           <div

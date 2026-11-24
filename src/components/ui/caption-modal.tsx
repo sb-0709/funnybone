@@ -22,6 +22,7 @@ type CaptionModalProps = {
   actions?: ReactNode
   emptyState?: ReactNode
   wrapNavigation?: boolean
+  onPublicChange?: (captionId: string, isPublic: boolean) => void
 }
 
 export function CaptionModal({
@@ -34,6 +35,7 @@ export function CaptionModal({
   actions,
   emptyState,
   wrapNavigation = false,
+  onPublicChange,
 }: CaptionModalProps) {
   const safeIndex = Math.max(0, Math.min(currentIndex, items.length - 1))
   const current = items[safeIndex]
@@ -76,6 +78,7 @@ export function CaptionModal({
           {current ? (
             <>
               <CaptionViewV2
+                key={current.id}
                 id={current.id}
                 imageUrl={current.imageUrl}
                 content={current.content}
@@ -91,15 +94,17 @@ export function CaptionModal({
                 hasNext={hasNext}
                 currentIndex={safeIndex}
                 totalCount={items.length}
+                postedStates={items.map((item) => item.isPublic ?? false)}
+                onPublicChange={onPublicChange}
               />
               {actions}
             </>
           ) : (
-            emptyState ?? (
+            (emptyState ?? (
               <div className="text-center text-white">
                 <p className="text-lg mb-4">No captions available.</p>
               </div>
-            )
+            ))
           )}
         </div>
       </div>

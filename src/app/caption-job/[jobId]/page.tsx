@@ -22,22 +22,36 @@ export default async function CaptionJobPage({ params }: Props) {
   const { data: { session } } = await supabase.auth.getSession()
   if (!session?.access_token || session.user.id !== user.id) return redirect('/login')
 
+  let job: CaptionJobUpdate
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-  if (!apiUrl) throw new Error('API base URL is not defined.')
-  const response = await fetch(`${apiUrl.replace(/\/+$/, '')}/pipeline/caption-job/${jobId}`, {
-    method: 'GET',
-    cache: 'no-store',
-    headers: { Authorization: `Bearer ${session.access_token}` },
-    signal: AbortSignal.timeout(30_000),
-  })
-  if (!response.ok) {
-    await response.body?.cancel()
-    if (response.status === 401) return redirect('/login')
-    if (response.status === 403 || response.status === 404) return notFound()
-    throw new Error('Unable to load this caption job. Please try again.')
+  if (apiUrl) {
+    // External caption service.
+    const response = await fetch(`${apiUrl.replace(/\/+$/, '')}/pipeline/caption-job/${jobId}`, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      signal: AbortSignal.timeout(30_000),
+    })
+    if (!response.ok) {
+      await response.body?.cancel()
+      if (response.status === 401) return redirect('/login')
+      if (response.status === 403 || response.status === 404) return notFound()
+      throw new Error('Unable to load this caption job. Please try again.')
+    }
+    job = await response.json()
+  } else {
+    // Built-in caption service: read the job directly (loaded only when used).
+    const [{ getPipelineConfig }, { getJobForUser }, { createAdminClient }] = await Promise.all([
+      import('@/lib/caption-pipeline/config'),
+      import('@/lib/caption-pipeline/jobs'),
+      import('@/lib/caption-pipeline/server'),
+    ])
+    const config = getPipelineConfig()
+    if (!config) throw new Error("Caption generation isn't set up yet.")
+    const found = await getJobForUser(createAdminClient(config), jobId, user.id)
+    if (!found) return notFound()
+    job = found
   }
-
-  const job: CaptionJobUpdate = await response.json()
   if (job?.jobId !== jobId
     || !['queued', 'running', 'completed', 'partially_completed', 'failed'].includes(job.status)
     || !Array.isArray(job.captionIds)

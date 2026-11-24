@@ -5,9 +5,16 @@ export type CaptionJobStatus =
 export type CaptionJobUpdate = {
   jobId: string
   status: CaptionJobStatus
-  progress: { total: number; completed: number; failed: number;
-    completedSteps: number; totalSteps: number }
+  progress: {
+    total: number
+    completed: number
+    failed: number
+    completedSteps: number
+    totalSteps: number
+  }
   captionIds: string[]
+  /** Why the job failed, in plain words (built-in caption service only). */
+  error?: string | null
 }
 export type CaptionGenerationOptions = {
   signal?: AbortSignal
@@ -177,7 +184,10 @@ export async function runCaptionJob<T>(imageId: string, options: ClientOptions<T
     }
     if (job.status === 'failed' || job.captionIds.length === 0) {
       clear()
-      throw new Error('No captions could be generated for this image. Please try again.')
+      const reason = typeof job.error === 'string' && job.error.length < 200 ? ` ${job.error}` : ''
+      throw new Error(
+        'No captions could be generated for this image.' + (reason || ' Please try again.')
+      )
     }
     // Keep the job reference if loading its captions fails, so retry never reruns the pipeline.
     const captions = await authenticated(current =>

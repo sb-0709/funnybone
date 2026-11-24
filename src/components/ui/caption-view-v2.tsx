@@ -26,6 +26,8 @@ export function CaptionViewV2({
   imageClassName,
   tone = 'dark',
   containerClassName,
+  onPublicChange,
+  postedStates,
 }: {
   id: string
   imageUrl: string
@@ -44,6 +46,10 @@ export function CaptionViewV2({
   imageClassName?: string
   tone?: 'dark' | 'auto'
   containerClassName?: string
+  /** Tells the parent list a caption was posted/unposted so it stays in sync. */
+  onPublicChange?: (captionId: string, isPublic: boolean) => void
+  /** Posted state of every caption in the list, used to mark the progress dots. */
+  postedStates?: boolean[]
 }) {
   const [isPublic, setIsPublic] = useState(initialIsPublic)
   const [isPosting, setIsPosting] = useState(false)
@@ -81,9 +87,10 @@ export function CaptionViewV2({
 
       // Update local state to reflect the change
       setIsPublic(true)
+      onPublicChange?.(captionId, true)
       toast({
         title: 'Caption Posted!',
-        description: 'Your caption has been made public and is now visible to others.',
+        description: 'It now appears in the Top 100, where people can vote on it.',
       })
     } catch (error) {
       console.error('Error posting caption:', error)
@@ -112,9 +119,10 @@ export function CaptionViewV2({
 
       // Update local state to reflect the change
       setIsPublic(false)
+      onPublicChange?.(captionId, false)
       toast({
         title: 'Caption Unposted',
-        description: 'Your caption has been made private and is no longer visible to others.',
+        description: 'It is private again and no longer shows in the Top 100.',
       })
     } catch (error) {
       console.error('Error unposting caption:', error)
@@ -134,15 +142,23 @@ export function CaptionViewV2({
         {/* Display Bar (Dots) */}
         {totalCount > 1 && (
           <div className="flex items-center justify-center gap-1 mb-6">
-            {Array.from({ length: totalCount }, (_, index) => (
-              <div
-                key={index}
-                className={`w-${totalCount <= 10 ? 8 : totalCount <= 20 ? 4 : 2} 
-                    h-1 rounded-full transition-colors duration-200 ${
-                      index === currentIndex ? 'bg-primary' : inactiveDotClass
+            {Array.from({ length: totalCount }, (_, index) => {
+              const posted = index === currentIndex ? isPublic : postedStates?.[index]
+              return (
+                <div
+                  key={index}
+                  title={posted ? 'Posted' : undefined}
+                  className={`w-${totalCount <= 10 ? 8 : totalCount <= 20 ? 4 : 2} 
+                    rounded-full transition-colors duration-200 ${posted ? 'h-1.5' : 'h-1'} ${
+                      index === currentIndex
+                        ? 'bg-primary'
+                        : posted
+                          ? 'bg-green-500'
+                          : inactiveDotClass
                     }`}
-              />
-            ))}
+                />
+              )
+            })}
           </div>
         )}
 
@@ -158,20 +174,14 @@ export function CaptionViewV2({
                      transition-colors duration-200 flex-shrink-0 mr-2 sm:mr-4 md:mr-6`}
               aria-label="Previous caption"
             >
-              <FaArrowLeft
-                className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 ${iconColorClass}`}
-              />
+              <FaArrowLeft className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 ${iconColorClass}`} />
             </button>
           )}
 
           {/* Image Container */}
           <div className="flex-1 flex items-center justify-center max-w-full">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={imageUrl}
-            alt="Caption image"
-              className={imageClasses}
-          />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={imageUrl} alt="Caption image" className={imageClasses} />
           </div>
 
           {/* Right Arrow */}
@@ -184,9 +194,7 @@ export function CaptionViewV2({
                      transition-colors duration-200 flex-shrink-0 ml-2 sm:ml-4 md:ml-6`}
               aria-label="Next caption"
             >
-              <FaArrowRight
-                className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 ${iconColorClass}`}
-              />
+              <FaArrowRight className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 ${iconColorClass}`} />
             </button>
           )}
         </div>
@@ -244,10 +252,7 @@ export function CaptionViewV2({
                                 ? 'bg-primary/50 text-primary-foreground/70 cursor-not-allowed'
                                 : 'bg-primary text-primary-foreground hover:bg-primary/90'
                             }`}
-                onClick={() => {
-                  console.log('Post button clicked!', { id, isPosting, isPublic, isOwner })
-                  handlePostCaption(id)
-                }}
+                onClick={() => handlePostCaption(id)}
                 disabled={isPosting}
                 aria-label={isPosting ? 'Posting...' : 'Post'}
               >
@@ -256,24 +261,33 @@ export function CaptionViewV2({
             )}
 
             {isPublic && (
-              <button
-                onClick={() => {
-                  if (isOwner) {
-                    console.log('Unpost button clicked!', { id, isPosting, isPublic, isOwner })
-                    handleUnpostCaption(id)
-                  }
-                }}
-                disabled={isPosting || !isOwner}
-                className={`rounded-lg w-24 h-12 flex items-center justify-center 
-                  transition-colors duration-200 ${
-                  isOwner
-                    ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30 cursor-pointer'
-                    : 'bg-green-500/20 text-green-400 cursor-default'
-                } ${isPosting ? 'opacity-50 cursor-not-allowed' : ''}`}
-                aria-label={isOwner ? 'Click to unpost' : 'Posted'}
-              >
-                <span className="font-bold text-sm">{isPosting ? 'Unposting...' : 'Posted'}</span>
-              </button>
+              <div className="flex flex-col items-center gap-1">
+                <span
+                  className="rounded-lg w-24 h-12 flex items-center justify-center gap-1.5
+                    bg-green-500/20 text-green-500 font-bold text-sm"
+                  role="status"
+                >
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4" aria-hidden>
+                    <path
+                      fillRule="evenodd"
+                      d="M16.7 5.3a1 1 0 0 1 0 1.4l-8 8a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1
+                        1.4-1.4L8 12.6l7.3-7.3a1 1 0 0 1 1.4 0Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  {isPosting ? 'Unposting...' : 'Posted'}
+                </span>
+                {isOwner && (
+                  <button
+                    onClick={() => handleUnpostCaption(id)}
+                    disabled={isPosting}
+                    className={`text-xs underline underline-offset-2 ${captionTextClass} 
+                      opacity-70 hover:opacity-100 disabled:opacity-40`}
+                  >
+                    Unpost
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </div>

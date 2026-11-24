@@ -27,7 +27,9 @@ export const fetchPopularCaptionsAction = async (limit = 100, period: Period = '
     )
     .eq('images.is_public', true)
     .eq('is_public', true)
-    .gt('like_count', 0)
+    // Include new posts with 0 votes so people can vote on them; still hide
+    // captions that were voted down (negative).
+    .gte('like_count', 0)
     .order('like_count', { ascending: false })
     .eq('is_public', true)
     .order('created_datetime_utc', { ascending: false })

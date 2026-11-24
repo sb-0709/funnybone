@@ -17,6 +17,8 @@ import { FileUpload } from '@/components/ui/file-upload'
 import LoadingScreen from '@/components/LoadingScreen'
 import { ImageGridSkeleton } from '@/components/ui/image-grid-skeleton'
 import { useToast } from '@/hooks/use-toast'
+import { ToastAction } from '@/components/ui/toast'
+import { friendlyCaptionError } from '@/utils/caption-errors'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -88,10 +90,35 @@ export function GenerateRoasts({
   const [userId, setUserId] = useState<string | null>(null)
   const { toast } = useToast()
   const router = useRouter()
-  const notifyPartialFailure = () => toast({
-    title: 'Some captions are ready',
-    description: 'Some humor flavors could not finish. Showing the captions that succeeded.',
-  })
+
+  // Plain-language errors; when the caption service is down, offer browsing instead.
+  const showCaptionError = (error: unknown) => {
+    const friendly = friendlyCaptionError(error)
+    toast({
+      title: friendly.title,
+      description: friendly.description,
+      action:
+        friendly.kind === 'unavailable' ? (
+          <ToastAction
+            altText="Browse photos"
+            onClick={() => {
+              setTab('banger')
+              document
+                .getElementById('photo-library')
+                ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }}
+          >
+            Browse photos
+          </ToastAction>
+        ) : undefined,
+    })
+  }
+
+  const notifyPartialFailure = () =>
+    toast({
+      title: 'Some captions are ready',
+      description: 'Some humor flavors could not finish. Showing the captions that succeeded.',
+    })
   const itemsPerPageOptions = [4, 8, 12, 16, 20, 24]
   const hasMoreCommonImages = commonUseImages.length < commonUseTotalCount
   const isInitialCommonImagesLoading = isLoadingCommonImages && commonUsePage === 1
@@ -131,10 +158,7 @@ export function GenerateRoasts({
         return
       }
       console.error('Error loading user images:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to load your uploaded images.',
-      })
+      showCaptionError(error)
     }
   }, [toast])
 
@@ -152,36 +176,31 @@ export function GenerateRoasts({
   }, [toast])
 
   const loadCommonImages = useCallback(
-    (
-    categoryId?: number,
-    search?: string,
-    page?: number,
-    pageSize?: number
-    ) => {
-    setIsLoadingCommonImages(true)
+    (categoryId?: number, search?: string, page?: number, pageSize?: number) => {
+      setIsLoadingCommonImages(true)
 
-    fetchCommonUseImagesAction(categoryId, search, page, pageSize)
-      .then(({ images, totalCount }) => {
-        const nextPage = page ?? 1
-        setCommonUseImages((prev) =>
-          nextPage > 1 ? [...prev, ...images] : images
-        )
-        setCommonUseTotalCount(totalCount)
-        setIsLoadingCommonImages(false)
-      })
-      .catch((error) => {
-        console.error('Error fetching common images:', error)
-        toast({
-          title: 'Error',
-          description: 'Failed to load images.',
+      fetchCommonUseImagesAction(categoryId, search, page, pageSize)
+        .then(({ images, totalCount }) => {
+          const nextPage = page ?? 1
+          setCommonUseImages((prev) => (nextPage > 1 ? [...prev, ...images] : images))
+          setCommonUseTotalCount(totalCount)
+          setIsLoadingCommonImages(false)
         })
-        setIsLoadingCommonImages(false)
-        if (!page || page <= 1) {
-          setCommonUseImages([])
-          setCommonUseTotalCount(0)
-        }
-      })
-  }, [toast])
+        .catch((error) => {
+          console.error('Error fetching common images:', error)
+          toast({
+            title: 'Error',
+            description: 'Failed to load images.',
+          })
+          setIsLoadingCommonImages(false)
+          if (!page || page <= 1) {
+            setCommonUseImages([])
+            setCommonUseTotalCount(0)
+          }
+        })
+    },
+    [toast]
+  )
 
   // Load common use images and categories when component mounts
   useEffect(() => {
@@ -192,8 +211,7 @@ export function GenerateRoasts({
   }, [loadCategories, loadUserImages, loadBookmarkedCaptions, loadUserInfo])
 
   useEffect(() => {
-    const categoryId =
-      selectedCategory === 'all' ? undefined : parseInt(selectedCategory)
+    const categoryId = selectedCategory === 'all' ? undefined : parseInt(selectedCategory)
     loadCommonImages(categoryId, debouncedSearchTerm, commonUsePage, commonUsePageSize)
   }, [selectedCategory, debouncedSearchTerm, commonUsePage, commonUsePageSize, loadCommonImages])
 
@@ -284,7 +302,9 @@ export function GenerateRoasts({
       }
       const captions = await generateCaptions(uploadedImageId, {
         ...operation,
-        onPartialFailure: () => { if (operation.isCurrent()) notifyPartialFailure() },
+        onPartialFailure: () => {
+          if (operation.isCurrent()) notifyPartialFailure()
+        },
       })
       operation.complete(captions)
       if (!operation.isCurrent()) return
@@ -298,10 +318,7 @@ export function GenerateRoasts({
       operation.fail(error)
       if (!operation.isCurrent()) return
       console.error('Error generating jokes:', error)
-      toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to generate jokes.',
-      })
+      showCaptionError(error)
     } finally {
       operation.finish()
     }
@@ -338,7 +355,9 @@ export function GenerateRoasts({
       }
       const captions = await generateCaptions(uploadedImageId, {
         ...operation,
-        onPartialFailure: () => { if (operation.isCurrent()) notifyPartialFailure() },
+        onPartialFailure: () => {
+          if (operation.isCurrent()) notifyPartialFailure()
+        },
       })
       operation.complete(captions)
       if (!operation.isCurrent()) return
@@ -352,10 +371,7 @@ export function GenerateRoasts({
       operation.fail(error)
       if (!operation.isCurrent()) return
       console.error('Error generating jokes from URL:', error)
-      toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to generate jokes.',
-      })
+      showCaptionError(error)
     } finally {
       operation.finish()
     }
@@ -412,7 +428,7 @@ export function GenerateRoasts({
     setImageId(imageId)
 
     try {
-    // Set number of captions to show this time
+      // Set number of captions to show this time
       const target = maxCaptions
       let captions: Caption[]
 
@@ -436,15 +452,18 @@ export function GenerateRoasts({
         } else {
           const generatedCaptions = await generateCaptions(imageId, {
             ...operation,
-            onPartialFailure: () => { if (operation.isCurrent()) notifyPartialFailure() },
+            onPartialFailure: () => {
+              if (operation.isCurrent()) notifyPartialFailure()
+            },
           })
           captions = [...curPopularCaptions.slice(0, target), ...generatedCaptions].slice(0, target)
         }
-
       } else {
         captions = await generateCaptions(imageId, {
           ...operation,
-          onPartialFailure: () => { if (operation.isCurrent()) notifyPartialFailure() },
+          onPartialFailure: () => {
+            if (operation.isCurrent()) notifyPartialFailure()
+          },
         })
         captions = captions.slice(0, target)
       }
@@ -487,10 +506,7 @@ export function GenerateRoasts({
                      px-0 min-h-screen"
     >
       {isLoading && (
-        <LoadingScreen
-          onContinueBrowsing={handleContinueBrowsing}
-          job={generation.progress}
-        />
+        <LoadingScreen onContinueBrowsing={handleContinueBrowsing} job={generation.progress} />
       )}
       <div className="min-h-[600px] flex flex-col">
         {!imagePreview && (
@@ -559,7 +575,10 @@ export function GenerateRoasts({
             </div>
 
             {/* Tabs for "Start with a banger" and "Choose from your library" */}
-            <div className="space-y-2 sm:space-y-3 md:space-y-4 mb-4">
+            <div
+              id="photo-library"
+              className="space-y-2 sm:space-y-3 md:space-y-4 mb-4 scroll-mt-24"
+            >
               <div className="flex border-b border-gray-300/40 dark:border-gray-700/60">
                 <button
                   onClick={() => setTab('banger')}
@@ -817,6 +836,7 @@ export function GenerateRoasts({
         {roasts.length > 0 && !isLoading && (
           <div className="w-full max-w-[650px] mx-auto px-4">
             <CaptionViewV2
+              key={roasts[currentCaptionIndex].id}
               id={roasts[currentCaptionIndex].id}
               imageUrl={imagePreview || ''}
               content={roasts[currentCaptionIndex].content}
@@ -833,6 +853,14 @@ export function GenerateRoasts({
               hasNext={currentCaptionIndex < roasts.length - 1}
               currentIndex={currentCaptionIndex}
               totalCount={roasts.length}
+              postedStates={roasts.map((caption) => caption.is_public)}
+              onPublicChange={(captionId, isPublic) =>
+                setRoasts((prev) =>
+                  prev.map((caption) =>
+                    caption.id === captionId ? { ...caption, is_public: isPublic } : caption
+                  )
+                )
+              }
             />
 
             {/* Action Buttons */}

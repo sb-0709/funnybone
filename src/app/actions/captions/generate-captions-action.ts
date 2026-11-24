@@ -9,6 +9,14 @@ import {
   type CaptionGenerationOptions,
 } from '@/utils/caption-job-client'
 
+/**
+ * Where the caption service lives. Uses the external service if
+ * NEXT_PUBLIC_API_BASE_URL is set, otherwise the app's built-in /api/pipeline routes.
+ */
+function getCaptionApiBaseUrl(): string {
+  return (process.env.NEXT_PUBLIC_API_BASE_URL || '/api').replace(/\/+$/, '')
+}
+
 interface GeneratePresignedUrlResponse {
   presignedUrl: string
   cdnUrl: string
@@ -105,12 +113,7 @@ async function makeRequest<T>(
 
   assertNonAnonymousToken(token)
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-  if (!baseUrl) {
-    throw new Error('API base URL is not defined.')
-  }
-
-  const url = `${baseUrl}${endpoint}`
+  const url = `${getCaptionApiBaseUrl()}${endpoint}`
 
   const response = await fetch(url, {
     method,
@@ -125,7 +128,14 @@ async function makeRequest<T>(
   if (!response.ok) {
     const errorText = await response.text()
     console.error(`API Error (${endpoint}):`, errorText)
-    throw new Error(`API request failed: ${response.status} ${response.statusText}`)
+    // The built-in service explains problems in plain words; show those when present.
+    let message: string | undefined
+    try {
+      message = (JSON.parse(errorText) as { message?: string }).message
+    } catch {
+      message = undefined
+    }
+    throw new Error(message || `API request failed: ${response.status} ${response.statusText}`)
   }
 
   return response.json()
@@ -174,8 +184,7 @@ export async function generateCaptions(
   imageId: string,
   options: CaptionGenerationOptions = {}
 ): Promise<Caption[]> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-  if (!apiUrl) throw new Error('API base URL is not defined.')
+  const apiUrl = getCaptionApiBaseUrl()
 
   return runCaptionJob(imageId, {
     ...options,
